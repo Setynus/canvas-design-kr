@@ -1,0 +1,104 @@
+canvas-design-kr
+================
+
+Copyright (c) 2026 Kwangho Kim
+
+This product is derived from "canvas-design" by Anthropic
+(https://github.com/anthropics/skills),
+licensed under the Apache License, Version 2.0.
+
+You may obtain a copy of the License at:
+    http://www.apache.org/licenses/LICENSE-2.0
+
+The original Anthropic LICENSE is preserved in this distribution as
+LICENSE-canvas-design.txt.
+
+----------------------------------------------------------------------
+ARCHITECTURE — SLIM CORE + OPTIONAL FULL FONT PACK (v1.0.1+)
+----------------------------------------------------------------------
+
+Starting with v1.0.1, this skill uses a two-tier distribution.
+v1.0.2 further trimmed the slim core (28 Hangul → 17 Hangul fonts)
+to stay within Claude Desktop's 30 MB uncompressed skill limit.
+
+  * SLIM CORE (this package, ZIP < 30 MB) — bundled in skill itself.
+    35 fonts: 28 Hangul-supporting + 7 Latin essentials.
+    Works immediately after install in Claude Desktop, Claude.ai,
+    Cowork, and Claude Code environments.
+
+  * FULL FONT PACK (separate, ~110 MB) — optional download via
+    scripts/install_full_fonts.sh (or .ps1 on Windows).
+    Adds 94 more typefaces: Old Hangul (옛한글), Eco patterns,
+    NanumBarunGothic family, NanumBarunpen, NanumPenScript, Noto
+    CJK variable fonts, GowunBatang, JejuMyeongjo, JejuHallasan,
+    NanumGothic full weights, NanumMyeongjo full weights,
+    BlackAndWhitePicture, additional Latin fonts, etc.
+
+The slim-core architecture exists to satisfy Claude Desktop's
+30 MB skill upload limit while keeping the full design freedom
+of the original 130-font bundle accessible to those who need it.
+
+----------------------------------------------------------------------
+MODIFICATIONS FROM THE ORIGINAL
+----------------------------------------------------------------------
+
+The following changes were introduced in canvas-design-kr (cumulative
+through v1.0.2):
+
+1. Added 17 Korean (Hangul-supporting) typefaces in core,
+   plus 105 additional via Full Pack.
+
+   Core (slim) bundle includes:
+   - Pretendard (Regular/Bold/Black) — orioncactus, OFL
+   - NanumSquare (Regular/Bold) — NAVER, OFL
+   - NanumSquareRound (Regular/Bold) — NAVER, OFL
+   - NanumSquareNeo (Regular/Bold) — NAVER, OFL
+   - NanumHuman (Light/Regular/Bold) — NAVER, OFL
+   - NanumGothic (Light) — NAVER, OFL
+   - NanumMyeongjo (Regular) — NAVER, OFL
+   - BlackHanSans, DoHyeon — Woowahan Brothers, OFL
+   - Sunflower-Bold — OFL
+
+   Latin core:
+   - WorkSans (Regular/Bold), Lora (Regular), Italiana, BigShoulders
+     (Bold), InstrumentSerif (Regular), JetBrainsMono (Regular)
+
+   Full Pack adds 105 more — see scripts/install_full_fonts.sh
+   Notable Full-Pack-only fonts: NanumBrushScript (캘리그래피),
+   NanumPenScript, NanumBarunpen, SongMyung, JejuGothic, Jua,
+   additional Pretendard/NanumSquare/Round/Neo weights, NotoSansKR/
+   NotoSerifKR variable, NanumBarunGothic, GowunBatang, JejuMyeongjo,
+   Old Hangul (옛한글), Eco patterns, etc.
+
+2. Extended SKILL.md with Korean-aesthetic content:
+   - 5 new design philosophies based on Korean visual tradition:
+     餘白 (Yeobaek), 丹靑 (Dancheong), 縫補 (Jogakbo),
+     古調 (Gojo), 餘湍 (Yeotan)
+   - Korean color systems section: 오방색 (Obangsaek),
+     오간색 (Ogansaek), natural-dye palette
+   - Hangul typography rules: font-script pairing matrix,
+     Hangul-Latin mixing ratios, vertical writing guidance,
+     Old Hangul (옛한글) typography section
+   - PIL code example for vertical Hangul composition
+   - STEP 0: Dynamic font discovery + core-to-full-pack fallback table
+
+3. Distribution infrastructure:
+   - .gitattributes — Git LFS auto-tracking for font binaries
+   - .github/workflows/release.yml — automatic ZIP build on tag push
+   - scripts/install_full_fonts.sh — bash installer for Linux/macOS/NAS
+   - scripts/install_full_fonts.ps1 — PowerShell installer for Windows
+
+4. Re-licensed under Apache License 2.0 (same as original) with
+   updated copyright attribution and modification notice.
+
+----------------------------------------------------------------------
+FONT LICENSES
+----------------------------------------------------------------------
+
+Each bundled font is distributed under the SIL Open Font License,
+Version 1.1. The license text for each font family is provided as
+assets/fonts/<family>-OFL.txt. Reserved Font Names listed in those
+license files must not be reused for derivative works.
+
+The Full Font Pack uses identical SIL OFL 1.1 licensing for all
+included additional fonts.

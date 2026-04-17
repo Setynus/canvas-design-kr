@@ -1,0 +1,43 @@
+# =====================================================================
+# Git LFS — track all font binaries
+# =====================================================================
+# Reasoning: 19개 폰트 파일이 5MB 초과 (NotoSerifKR 23MB 등). 모든 폰트
+# 바이너리를 LFS로 추적하여 저장소 본체를 가볍게 유지.
+#
+# 적용 방법:
+#   1) git lfs install            (한 번만, 로컬 머신에 LFS 설치)
+#   2) (이 파일이 저장소에 있는 상태에서) git add canvas-fonts/
+#   3) git commit -m "Track font files with LFS"
+#   4) git push
+#
+# GitHub에 올리는 경우 LFS 무료 한도(저장 1 GB / 월 대역폭 1 GB) 확인.
+
+*.ttf  filter=lfs diff=lfs merge=lfs -text
+*.otf  filter=lfs diff=lfs merge=lfs -text
+*.ttc  filter=lfs diff=lfs merge=lfs -text
+*.woff filter=lfs diff=lfs merge=lfs -text
+*.woff2 filter=lfs diff=lfs merge=lfs -text
+
+# =====================================================================
+# Text files — line ending & encoding normalization
+# =====================================================================
+# 한국어가 포함된 텍스트 파일은 UTF-8 + LF로 통일
+
+*.md       text eol=lf working-tree-encoding=UTF-8
+*.txt      text eol=lf working-tree-encoding=UTF-8
+*.py       text eol=lf working-tree-encoding=UTF-8
+*.json     text eol=lf working-tree-encoding=UTF-8
+*.yml      text eol=lf working-tree-encoding=UTF-8
+*.yaml     text eol=lf working-tree-encoding=UTF-8
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# =====================================================================
+# Linguist hints — GitHub language stats
+# =====================================================================
+# 폰트 디렉토리는 언어 통계에서 제외 (자동 감지가 헷갈리는 경우 방지)
+
+canvas-fonts/* linguist-vendored
+canvas-fonts/** linguist-vendored
+LICENSE-canvas-design.txt linguist-generated
+NOTICE.txt linguist-documentation

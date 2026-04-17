@@ -1,0 +1,57 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Editors / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+env/
+
+# Build / dist artifacts
+build/
+dist/
+*.egg
+*.tar.gz
+
+# Test / scratch
+/test/
+/scratch/
+*.bak
+*.tmp
+
+# Skill rendering output (사용자가 생성한 .png/.pdf/.md 산출물은 저장소에 커밋하지 않음)
+/output/
+/outputs/
+*.generated.png
+*.generated.pdf
+*.generated.md
+
+# Local font additions not part of the official bundle
+canvas-fonts/_local/
+canvas-fonts/공공누리/
+
+# Archives (배포용 zip 임시 빌드)
+canvas-design-kr-v*.zip

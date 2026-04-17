@@ -1,0 +1,115 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 1
+
+      - name: Pull LFS objects
+        run: git lfs pull
+
+      - name: Determine version
+        id: ver
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Build slim core skill ZIP
+        run: |
+          mkdir -p _dist _stage/canvas-design-kr
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitattributes' \
+            --exclude='.gitignore' \
+            --exclude='_dist' \
+            --exclude='_stage' \
+            --exclude='_full_pack_src' \
+            ./ ./_stage/canvas-design-kr/
+          cd _stage && zip -rq "../_dist/canvas-design-kr-${{ steps.ver.outputs.version }}.zip" canvas-design-kr/
+          cd ..
+          ls -lh _dist/
+
+      - name: Verify slim core size
+        run: |
+          SIZE=$(stat -c%s "_dist/canvas-design-kr-${{ steps.ver.outputs.version }}.zip")
+          MB=$((SIZE / 1048576))
+          echo "Slim core ZIP: ${MB} MB"
+          if [ "$MB" -gt 28 ]; then
+            echo "::warning::Slim core ZIP is ${MB} MB — close to Claude Desktop's 30 MB limit."
+          fi
+          if [ "$MB" -gt 30 ]; then
+            echo "::error::Slim core ZIP exceeds Claude Desktop's 30 MB limit!"
+            exit 1
+          fi
+
+      - name: Verify slim core font count
+        run: |
+          FC=$(find _stage/canvas-design-kr/assets/fonts -type f \( -name "*.ttf" -o -name "*.otf" \) 2>/dev/null | wc -l)
+          echo "Slim core fonts: $FC"
+          if [ "$FC" -lt 20 ]; then
+            echo "::error::Slim core font count too low ($FC). LFS pull likely failed."
+            exit 1
+          fi
+
+      - name: Build full font pack ZIP (if _full_pack_src/ exists)
+        run: |
+          if [ -d "_full_pack_src/fonts" ]; then
+            mkdir -p _stage_full
+            cp -r _full_pack_src/* _stage_full/
+            cd _stage_full
+            zip -rq "../_dist/canvas-design-kr-fonts-full-${{ steps.ver.outputs.version }}.zip" .
+            cd ..
+            ls -lh _dist/
+          else
+            echo "::notice::No _full_pack_src/ directory found — skipping full pack build."
+            echo "          To enable full pack release, place font files in _full_pack_src/fonts/"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: canvas-design-kr ${{ steps.ver.outputs.version }}
+          body: |
+            ## canvas-design-kr ${{ steps.ver.outputs.version }}
+
+            ### Downloads
+
+            **`canvas-design-kr-${{ steps.ver.outputs.version }}.zip`** (slim core, ~22 MB)
+            ↳ Claude Desktop 등 모든 환경에서 즉시 등록·사용 가능. 한글 28종 + 영문 7종 핵심 폰트 번들.
+
+            **`canvas-design-kr-fonts-full-${{ steps.ver.outputs.version }}.zip`** (optional full pack, ~110 MB)
+            ↳ 옛한글, 에코 패턴, NanumBarunGothic, NotoSansKR variable, GowunBatang 등 94종 추가.
+
+            ### Installation
+
+            Slim core:
+            ```bash
+            unzip canvas-design-kr-${{ steps.ver.outputs.version }}.zip -d ~/.claude/skills/
+            # 또는 NAS:
+            unzip canvas-design-kr-${{ steps.ver.outputs.version }}.zip -d /volume1/claude/skills/
+            ```
+
+            Full pack (after slim core is installed):
+            ```bash
+            cd ~/.claude/skills/canvas-design-kr/
+            bash scripts/install_full_fonts.sh           # Linux/macOS/NAS
+            .\scripts\install_full_fonts.ps1             # Windows PowerShell
+            ```
+
+            See `references/changelog.md` for detailed changes.
+          files: |
+            _dist/canvas-design-kr-*.zip
+          draft: false
+          prerelease: false
