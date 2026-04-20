@@ -33,6 +33,8 @@ env/
 # Build / dist artifacts
 build/
 dist/
+_dist/
+_stage/
 *.egg
 *.tar.gz
 
@@ -50,8 +52,9 @@ dist/
 *.generated.md
 
 # Local font additions not part of the official bundle
-canvas-fonts/_local/
-canvas-fonts/공공누리/
+assets/fonts/_local/
+assets/fonts/공공누리/
 
-# Archives (배포용 zip 임시 빌드)
+# Archives (배포용 ZIP 임시 빌드 산출물)
 canvas-design-kr-v*.zip
+canvas-design-kr-fonts-full-v*.zip
