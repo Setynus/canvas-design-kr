@@ -14,82 +14,94 @@ The original Anthropic LICENSE is preserved in this distribution as
 LICENSE-canvas-design.txt.
 
 ----------------------------------------------------------------------
-ARCHITECTURE — SLIM CORE + OPTIONAL FULL FONT PACK (v1.0.1+)
+ARCHITECTURE — CJK-COMPLETE CORE + OPTIONAL FULL FONT PACK (v1.1.0+)
 ----------------------------------------------------------------------
 
-Starting with v1.0.1, this skill uses a two-tier distribution.
-v1.0.2 further trimmed the slim core (28 Hangul → 17 Hangul fonts)
-to stay within Claude Desktop's 30 MB uncompressed skill limit.
+Starting with v1.1.0, this skill uses a two-tier distribution with a
+deliberately CJK-complete core. Design rationale:
 
-  * SLIM CORE (this package, ZIP < 30 MB) — bundled in skill itself.
-    35 fonts: 28 Hangul-supporting + 7 Latin essentials.
-    Works immediately after install in Claude Desktop, Claude.ai,
-    Cowork, and Claude Code environments.
+Pre-v1.1.0 core (v1.0.x) bundled 24 fonts, all of which were Google
+Fonts distribution subsets that do NOT contain CJK ideographs (한자).
+The skill's own philosophy names (餘白·丹靑·縫補·古調·餘湍) rendered
+as tofu (□) unless the user separately installed the Full Font Pack
+via scripts/install_full_fonts.{sh,ps1}.
+
+Claude Desktop and claude.ai web users cannot run the Full Pack
+installer — these environments only accept ZIP uploads. This meant
+the skill's core Korean aesthetic (which fundamentally requires 한자)
+was permanently inaccessible to those users.
+
+v1.1.0 resolves this by rebuilding the core around 5 CJK-complete
+fonts that fit within Claude Desktop's 30 MB uncompressed skill limit.
+
+  * CJK-COMPLETE CORE (this package, ~28.5 MB uncompressed):
+    - NotoSansKR-VF.ttf          — variable sans-serif, 8566 CJK
+    - NanumMyeongjo-OldHangul.ttf   — serif + 옛한글, 5005 CJK
+    - NanumBrushScript-Regular.ttf  — brush calligraphy, 4888 CJK
+    - NanumPenScript-Regular.ttf    — pen script, 4888 CJK
+    - JejuGothic-Regular.ttf        — regional display, 4888 CJK
+    All five support 餘白, 丹靑, 縫補, 古調, 餘湍 natively, without
+    any additional installation step.
 
   * FULL FONT PACK (separate, ~110 MB) — optional download via
     scripts/install_full_fonts.sh (or .ps1 on Windows).
-    Adds 94 more typefaces: Old Hangul (옛한글), Eco patterns,
-    NanumBarunGothic family, NanumBarunpen, NanumPenScript, Noto
-    CJK variable fonts, GowunBatang, JejuMyeongjo, JejuHallasan,
-    NanumGothic full weights, NanumMyeongjo full weights,
-    BlackAndWhitePicture, additional Latin fonts, etc.
-
-The slim-core architecture exists to satisfy Claude Desktop's
-30 MB skill upload limit while keeping the full design freedom
-of the original 130-font bundle accessible to those who need it.
+    Adds 124 more typefaces including Pretendard (all weights),
+    NanumSquare/Round/Neo full weights, NanumGothic full family,
+    NanumBarunGothic, NanumMyeongjo subset variants, Eco patterns,
+    GowunBatang/GowunDodum, JejuMyeongjo/JejuHallasan, Hahmlet,
+    D2Coding, BlackHanSans, DoHyeon, Jua, Sunflower-Bold, WorkSans,
+    Lora, Italiana, BigShoulders, InstrumentSerif, JetBrainsMono,
+    and more. Full Pack installation is Claude Code only — Claude
+    Desktop and claude.ai web do not support running scripts.
 
 ----------------------------------------------------------------------
 MODIFICATIONS FROM THE ORIGINAL
 ----------------------------------------------------------------------
 
-The following changes were introduced in canvas-design-kr (cumulative
-through v1.0.2):
+Cumulative changes introduced in canvas-design-kr through v1.1.0:
 
-1. Added 17 Korean (Hangul-supporting) typefaces in core,
-   plus 105 additional via Full Pack.
+1. Extended SKILL.md with Korean-aesthetic content:
+   - 5 new design philosophies: 餘白 (Yeobaek), 丹靑 (Dancheong),
+     縫補 (Jogakbo), 古調 (Gojo), 餘湍 (Yeotan)
+   - Korean color systems: 오방색, 오간색, 자연염색 palette
+   - Hangul typography rules: font-script pairing, Hangul-Latin-CJK
+     mixing, vertical writing (세로쓰기), 옛한글 support
+   - RULE 0: Environment detection + font discovery
+   - RULE 1 (v1.1.0): "Core already supports CJK"
+   - pick_cjk_font() helper with priority ordering
 
-   Core (slim) bundle includes:
-   - Pretendard (Regular/Bold/Black) — orioncactus, OFL
-   - NanumSquare (Regular/Bold) — NAVER, OFL
-   - NanumSquareRound (Regular/Bold) — NAVER, OFL
-   - NanumSquareNeo (Regular/Bold) — NAVER, OFL
-   - NanumHuman (Light/Regular/Bold) — NAVER, OFL
-   - NanumGothic (Light) — NAVER, OFL
-   - NanumMyeongjo (Regular) — NAVER, OFL
-   - BlackHanSans, DoHyeon — Woowahan Brothers, OFL
-   - Sunflower-Bold — OFL
+2. Core font bundle (v1.1.0): 5 CJK-complete typefaces listed above.
 
-   Latin core:
-   - WorkSans (Regular/Bold), Lora (Regular), Italiana, BigShoulders
-     (Bold), InstrumentSerif (Regular), JetBrainsMono (Regular)
+3. Full Font Pack (separate, v1.1.0): 124 additional typefaces.
+   Previously-core fonts (Pretendard, NanumSquare family, NanumGothic
+   subsets, BlackHanSans, DoHyeon, Sunflower, WorkSans, Lora, etc.)
+   were moved to the Full Pack in v1.1.0.
 
-   Full Pack adds 105 more — see scripts/install_full_fonts.sh
-   Notable Full-Pack-only fonts: NanumBrushScript (캘리그래피),
-   NanumPenScript, NanumBarunpen, SongMyung, JejuGothic, Jua,
-   additional Pretendard/NanumSquare/Round/Neo weights, NotoSansKR/
-   NotoSerifKR variable, NanumBarunGothic, GowunBatang, JejuMyeongjo,
-   Old Hangul (옛한글), Eco patterns, etc.
-
-2. Extended SKILL.md with Korean-aesthetic content:
-   - 5 new design philosophies based on Korean visual tradition:
-     餘白 (Yeobaek), 丹靑 (Dancheong), 縫補 (Jogakbo),
-     古調 (Gojo), 餘湍 (Yeotan)
-   - Korean color systems section: 오방색 (Obangsaek),
-     오간색 (Ogansaek), natural-dye palette
-   - Hangul typography rules: font-script pairing matrix,
-     Hangul-Latin mixing ratios, vertical writing guidance,
-     Old Hangul (옛한글) typography section
-   - PIL code example for vertical Hangul composition
-   - STEP 0: Dynamic font discovery + core-to-full-pack fallback table
-
-3. Distribution infrastructure:
-   - .gitattributes — Git LFS auto-tracking for font binaries
+4. Distribution infrastructure:
    - .github/workflows/release.yml — automatic ZIP build on tag push
-   - scripts/install_full_fonts.sh — bash installer for Linux/macOS/NAS
-   - scripts/install_full_fonts.ps1 — PowerShell installer for Windows
+   - scripts/build_core_from_fullpack.{sh,ps1} — maintainer tool to
+     extract 5 core fonts from a locally-installed Full Pack and
+     build the v1.1.0 core ZIP
+   - scripts/install_full_fonts.{sh,ps1} — Full Pack installer
+     (Claude Code environments only)
+   - scripts/discover_fonts.py — font discovery diagnostic
 
-4. Re-licensed under Apache License 2.0 (same as original) with
+5. Re-licensed under Apache License 2.0 (same as original) with
    updated copyright attribution and modification notice.
+
+----------------------------------------------------------------------
+VERSION HISTORY OF CORE COMPOSITION
+----------------------------------------------------------------------
+
+  v1.0.0  — Initial release (130-font single bundle, ~124 MB)
+  v1.0.1  — Split into Slim Core (35 fonts) + Full Pack
+  v1.0.2  — Reduced Slim Core to 24 fonts (30 MB limit compliance)
+  v1.0.3  — PowerShell installer fix
+  v1.0.4  — Font discovery RULE 0 (relative path elimination)
+  v1.0.5  — discover_fonts.py + MANIFEST.txt
+  v1.0.6  — CJK font documentation added
+  v1.0.7  — CJK font filename corrections (Noto variable naming)
+  v1.1.0  — Core rebuilt around 5 CJK-complete fonts (breaking)
 
 ----------------------------------------------------------------------
 FONT LICENSES
@@ -102,3 +114,9 @@ license files must not be reused for derivative works.
 
 The Full Font Pack uses identical SIL OFL 1.1 licensing for all
 included additional fonts.
+
+Core font sources (v1.1.0):
+  - Noto Sans KR — Google + Adobe (fonts.google.com)
+  - NanumMyeongjo-OldHangul, NanumBrushScript, NanumPenScript —
+    NAVER Corp. (hangeul.naver.com/font)
+  - JejuGothic — Jeju Special Self-Governing Province

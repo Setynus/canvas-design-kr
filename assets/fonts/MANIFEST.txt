@@ -1,0 +1,15 @@
+# canvas-design-kr — Font Manifest
+# 이 파일은 assets/fonts/에 실제로 존재해야 하는 폰트 파일 목록의 표준 참조다.
+# 풀팩 설치 시 인스톨러가 자동으로 갱신한다.
+#
+# Format: <pack>:<filename>  (한 줄에 하나)
+#   pack = core | full
+#
+# 마지막 갱신: 2026-04-20 (v1.1.0 코어 패키지)
+# Pack: core (5 files, ~28.5 MB, CJK-complete)
+
+core:JejuGothic-Regular.ttf
+core:NanumBrushScript-Regular.ttf
+core:NanumMyeongjo-OldHangul.ttf
+core:NanumPenScript-Regular.ttf
+core:NotoSansKR-VF.ttf

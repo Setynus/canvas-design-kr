@@ -1,17 +1,17 @@
 ---
 name: canvas-design-kr
-description: 한국적 미학(餘白·단청·조각보·먹·민화)과 현대 K-디자인을 시각 철학으로 표현하는 .png/.pdf 디자인 스킬. 한·영 통합 본문 Pretendard + 나눔글꼴 시리즈 등 한글 17종 + 영문 핵심 7종이 코어에 번들되어 즉시 사용 가능. 풀 폰트팩(105종 추가) 설치 시 옛한글·에코·바른고딕·노토 시리즈까지 확장. 트리거 — 한글 포스터, 한국적 디자인, 한국 전통 디자인, 한지 느낌, 단청 색상, 조각보 디자인, 한글 타이포그래피, 캘리그래피, 공공기관 포스터, 한국 미학, 동양적 미학, 여백의 미, 먹 그림, 민화풍, 산수화, 조선 백자 느낌, 궁궐 패턴, 오방색, 한국 모던, K-디자인, K-미니멀, 옛한글, 중세 국어. Use this skill whenever the user asks to create a poster, design, or visual art with Korean aesthetic, Hangul typography, or Korean cultural references. Output only .md, .pdf, .png files. Create original visual designs, never copying existing artists' work to avoid copyright violations.
+description: 한국적 미학(餘白·丹靑·縫補·古調·餘湍)과 현대 K-디자인을 시각 철학으로 표현하는 .png/.pdf 디자인 스킬. 코어 5종(NotoSansKR·NanumMyeongjo-OldHangul·NanumBrushScript·NanumPenScript·JejuGothic) 모두 CJK 한자 완전 지원 — 스킬의 철학명 그 자체(餘白·丹靑·縫補·古調·餘湍)를 즉시 렌더링 가능. 풀 폰트팩(124종 추가) 설치 시 Pretendard·NanumSquare·NanumGothic 서브셋, 에코 패턴, 고운글꼴, 제주글꼴 등으로 확장. 트리거 — 한글 포스터, 한국적 디자인, 한국 전통 디자인, 한지 느낌, 단청 색상, 조각보 디자인, 한글 타이포그래피, 캘리그래피, 공공기관 포스터, 한국 미학, 동양적 미학, 여백의 미, 먹 그림, 민화풍, 산수화, 조선 백자 느낌, 궁궐 패턴, 오방색, 한국 모던, K-디자인, K-미니멀, 옛한글, 한자 혼용, 한문 서예. Use this skill whenever the user asks to create a poster, design, or visual art with Korean aesthetic, Hangul typography, or Korean cultural references. Output only .md, .pdf, .png files. Create original visual designs, never copying existing artists' work to avoid copyright violations.
 license: Apache License 2.0 (skill code) / SIL OFL 1.1 (fonts — see assets/fonts/*-OFL.txt)
 metadata:
-  version: 1.0.2
+  version: 1.1.0
   author: Kwangho Kim
   created: 2026-04-16
-  updated: 2026-04-17
+  updated: 2026-04-19
   based_on: anthropic/canvas-design (Apache 2.0)
 ---
 
 <!--
-canvas-design-kr v1.0.2 (Slim Core + Optional Full Pack Architecture)
+canvas-design-kr v1.1.0 (CJK-Complete Core Architecture)
 Copyright (c) 2026 Kwangho Kim
 Created: 2026-04-16
 Based on canvas-design (© Anthropic, Apache License 2.0)
@@ -20,12 +20,161 @@ See LICENSE-canvas-design.txt and NOTICE.txt for full attribution.
 
 This skill creates **museum-quality visual art** — posters, single-page compositions, PDFs — driven by a **design philosophy**, expressed through form, space, color, and minimal text. It extends the original `canvas-design` skill for Korean aesthetics:
 
-- **24 fonts bundled in core** (Hangul 17 + Latin 7) — works immediately after install
-- **105 additional fonts via optional Full Pack** — Old Hangul, Eco patterns, BarunGothic, Noto CJK variable, etc.
-- **5 additional Korean-aesthetic philosophies** (餘白·丹靑·縫補·古調·餘湍) alongside the 5 original
-- **Korean typesetting rules**: Hangul-Latin mixing, vertical writing, 오방색·자연염색 systems
+- **5 CJK-complete core fonts** (~28.5 MB, Desktop 30 MB 한도 내) — 한글·영문·한자 모두 즉시 지원
+- **124 additional fonts via optional Full Pack** — Pretendard, NanumSquare 서브셋, 에코 패턴, 고운글꼴 등
+- **5 Korean-aesthetic philosophies** (餘白·丹靑·縫補·古調·餘湍) alongside the 5 original Western ones
+- **Korean typesetting rules**: Hangul-Latin-CJK mixing, 세로쓰기, 오방색·자연염색 팔레트
 
 Output only `.md`, `.pdf`, and `.png` files.
+
+---
+
+## ⛔ RULE 0 — 환경 감지와 폰트 디렉터리 확인
+
+이 스킬을 사용할 때 **다른 어떤 작업보다도 먼저** 실행 환경을 판정하고 폰트 디렉터리의 실제 위치를 확인해야 한다. 이 단계를 건너뛰면 PIL이 시스템 기본 폰트로 조용히 폴백하여 한글이 □로 출력된다.
+
+### 환경 감지 — 3가지 실행 환경
+
+| 환경 | 특징 | 스크립트 실행 |
+|---|---|---|
+| **Claude Code (CLI)** | `~/.claude/skills/`에 디렉터리 배치, bash/PowerShell 가능 | ✅ `discover_fonts.py` 사용 |
+| **Claude Desktop** | ZIP 업로드, 샌드박스 내부 스냅샷 사용 | ⚠️ 제한적, 인라인 코드 권장 |
+| **claude.ai 웹** | ZIP 업로드, 샌드박스 내부 스냅샷 사용 | ⚠️ 제한적, 인라인 코드 권장 |
+
+### 방법 A — 디스커버리 스크립트 (Claude Code 환경)
+
+```bash
+# Linux / macOS / WSL
+python3 ~/.claude/skills/canvas-design-kr/scripts/discover_fonts.py
+
+# Claude.ai 샌드박스
+python3 /mnt/skills/user/canvas-design-kr/scripts/discover_fonts.py
+```
+
+```powershell
+# Windows PowerShell
+python "$env:USERPROFILE\.claude\skills\canvas-design-kr\scripts\discover_fonts.py"
+```
+
+스크립트는 `SKILL_ROOT`, `FONT_DIR` 절대경로와 폰트 파일명 전체 목록을 출력한다.
+
+### 방법 B — 인라인 코드 (Desktop / claude.ai 웹 권장)
+
+Desktop과 claude.ai 웹은 스크립트 실행이 제한적이므로 다음 인라인 패턴을 사용한다:
+
+```python
+import os, glob
+
+# 표준 경로 후보를 순회하여 폰트 디렉터리가 존재하는 첫 경로 채택
+for root in [
+    os.environ.get("CANVAS_DESIGN_KR_ROOT", ""),
+    "/mnt/skills/user/canvas-design-kr",
+    os.path.expanduser("~/.claude/skills/canvas-design-kr"),
+    os.path.expandvars("%USERPROFILE%\\.claude\\skills\\canvas-design-kr"),
+    os.path.join(os.getcwd(), ".claude", "skills", "canvas-design-kr"),
+]:
+    if root and os.path.isdir(os.path.join(root, "assets", "fonts")):
+        SKILL_ROOT = os.path.abspath(root)
+        FONT_DIR = os.path.join(SKILL_ROOT, "assets", "fonts")
+        break
+else:
+    raise RuntimeError("canvas-design-kr 스킬 폰트 디렉터리를 찾을 수 없습니다.")
+
+FONTS = sorted(
+    [os.path.basename(p) for p in glob.glob(os.path.join(FONT_DIR, "*.ttf"))] +
+    [os.path.basename(p) for p in glob.glob(os.path.join(FONT_DIR, "*.otf"))]
+)
+```
+
+### 패키지 판정
+
+| `len(FONTS)` | 상태 | 행동 |
+|---|---|---|
+| 0 | 스킬 설치 불완전 | 즉시 중단, 사용자에게 재설치 안내 |
+| 1–4 | 코어 일부 누락 | 누락 파일을 사용자에게 보고, 가용 폰트로 진행 |
+| 5 (정확) | **코어 패키지 (v1.1.0)** | [코어 5종 매니페스트](#코어-5종-매니페스트-v110) 참고 |
+| 100+ | **풀팩 설치됨** | Pretendard·NanumSquare·NanumGothic 시리즈 등 자유 선택 |
+
+---
+
+## ⛔ RULE 1 — 코어는 CJK 한자를 완전 지원한다
+
+**v1.1.0부터 코어 5종 모두 CJK 한자를 완전 지원한다.** 이전 버전의 "한자 사용 시 풀팩 설치 필수" 경고는 **더 이상 유효하지 않다**.
+
+- `餘白`, `丹靑`, `縫補`, `古調`, `餘湍` 등 스킬의 철학명과 한자 모티프는 **코어에서 즉시 렌더링된다**
+- 한자 혼용이 필요하면 `NotoSansKR-VF.ttf`(산세리프) 또는 `NanumMyeongjo-OldHangul.ttf`(명조 + 옛한글)을 기본 선택
+- `NanumBrushScript`, `NanumPenScript`는 캘리그래피·한자 서예 모두 지원
+- `JejuGothic`은 향토 디스플레이 + CJK 지원
+
+### 코어 5종 매니페스트 (v1.1.0)
+
+| 파일명 | 분류 | CJK | 크기 | 용도 |
+|---|---|---|---|---|
+| `NotoSansKR-VF.ttf` | 가변 산세리프 | ✅ 8,566자 | 9.93 MB | **기본 본문**(한·영·한자 통합) |
+| `NanumMyeongjo-OldHangul.ttf` | 명조 + 옛한글 | ✅ 5,005자 | 9.25 MB | 고전 명조, 옛한글, 한문 |
+| `NanumBrushScript-Regular.ttf` | 붓글씨 캘리 | ✅ 4,888자 | 3.66 MB | 餘湍·발묵·한자 서예 |
+| `NanumPenScript-Regular.ttf` | 펜글씨 | ✅ 4,888자 | 3.47 MB | 손글씨, 편지, 메모 |
+| `JejuGothic-Regular.ttf` | 향토 디스플레이 | ✅ 4,888자 | 2.42 MB | 제주 향토, CJK 디스플레이 |
+
+**총 ~28.5 MB** — Claude Desktop의 30 MB 비압축 한도 내에 안전하게 수납.
+
+### pick_cjk_font() — CJK 폰트 자동 선택
+
+한자가 포함된 텍스트를 렌더링할 때 다음 우선순위로 폰트를 선택한다:
+
+```python
+def pick_cjk_font(style="sans", weight="regular"):
+    """
+    style: "sans" | "serif" | "brush" | "pen" | "display"
+    weight: "regular" | "bold" | "light"
+    Returns: 폰트 파일명 (FONT_DIR 기준 상대 파일명)
+    """
+    if style == "brush":
+        return "NanumBrushScript-Regular.ttf"
+    if style == "pen":
+        return "NanumPenScript-Regular.ttf"
+    if style == "serif":
+        return "NanumMyeongjo-OldHangul.ttf"
+    if style == "display":
+        return "JejuGothic-Regular.ttf"
+    # 기본: 산세리프 — NotoSansKR 가변 폰트 (모든 weight 커버)
+    return "NotoSansKR-VF.ttf"
+```
+
+NotoSansKR은 **가변 폰트**이므로 `font_variation_settings`로 굵기를 조절한다 (PIL 10.x+):
+
+```python
+from PIL import ImageFont
+font = ImageFont.truetype(os.path.join(FONT_DIR, "NotoSansKR-VF.ttf"), 64)
+# PIL 10.1+ 에서 가변 축 설정 (400=Regular, 700=Bold, 900=Black)
+try:
+    font.set_variation_by_axes([700])
+except AttributeError:
+    pass  # 하위 PIL에서는 기본 weight(400)로 진행
+```
+
+### 강제 패턴 — 모든 후속 코드
+
+```python
+# ✅ 유일하게 허용되는 패턴
+font = ImageFont.truetype(os.path.join(FONT_DIR, "NotoSansKR-VF.ttf"), 64)
+
+# ❌ 절대 금지 — 상대경로 / 파일명만
+font = ImageFont.truetype("NotoSansKR-VF.ttf", 64)
+font = ImageFont.truetype("./assets/fonts/NotoSansKR-VF.ttf", 64)
+
+# ❌ 절대 금지 — 시스템 폰트 폴백
+font = ImageFont.truetype("Pretendard", 64)
+font = ImageFont.truetype("malgun.ttf", 64)
+
+# ❌ 절대 금지 — 코어에 없는 파일명 추측 (v1.0.x 코드 호환 실패)
+font = ImageFont.truetype(os.path.join(FONT_DIR, "Pretendard-Bold.otf"), 64)
+# v1.1.0 코어에는 Pretendard 없음. 풀팩 설치 필요.
+```
+
+**파일명을 추측하지 말 것.** 항상 디스커버리 결과의 `FONTS` 목록 또는 코어 5종 매니페스트에 있는 정확한 파일명을 사용한다. v1.0.x 코드를 v1.1.0에서 실행하면 `Pretendard`, `NanumSquare`, `BlackHanSans`, `DoHyeon` 등이 모두 없어 실패한다.
+
+---
 
 Complete the work in two steps:
 1. **Design Philosophy Creation** (`.md` file)
@@ -33,61 +182,37 @@ Complete the work in two steps:
 
 ---
 
-## STEP 0 — FONT DISCOVERY (필수 사전 단계)
+## STEP 0 보강 — 풀팩 폰트 폴백 매핑
 
-**Always run this before selecting fonts.** The skill ships with a slim core but the user may have installed the Full Pack — never assume which fonts are available.
+⛔ RULE 0에서 결정한 `FONTS` 목록에 원하는 풀팩 폰트가 없으면, 아래 표에 따라 코어 폰트로 즉시 대체하고 사용자에게 풀팩 설치를 안내한다:
 
-```python
-import os, glob
+> "이 디자인은 풀 폰트팩의 `<폰트명>`을 활용하면 더 좋습니다. 풀팩 설치는 Claude Code 환경에서 `bash scripts/install_full_fonts.sh` (또는 Windows: `.\scripts\install_full_fonts.ps1`)로 진행할 수 있습니다. Claude Desktop/claude.ai 웹 환경은 풀팩 자동 설치를 지원하지 않습니다. 일단 코어 폰트인 `<대체 폰트>`로 작업을 진행하겠습니다."
 
-FONT_DIR = os.path.join(os.path.dirname(__file__), "assets", "fonts")
-# Skill 루트 기준 경로. Claude Code에서 SKILL.md가 로드된 경우:
-# SKILL_ROOT = "<skill-install-path>/canvas-design-kr"
-# FONT_DIR = SKILL_ROOT + "/assets/fonts"
+### 코어 5종 → 풀팩 폴백 매핑
 
-available = sorted(set(
-    [os.path.basename(p) for p in glob.glob(f"{FONT_DIR}/*.ttf")] +
-    [os.path.basename(p) for p in glob.glob(f"{FONT_DIR}/*.otf")]
-))
-print(f"사용 가능 폰트: {len(available)}개")
-# 24개 → 코어만, 100개 이상 → 풀팩 설치됨
-```
+v1.1.0 코어는 의도적으로 슬림하므로, **대부분의 폰트가 풀팩 전용**이다. 요청 폰트가 코어에 없으면:
 
-**의사결정:**
-- **24개**: 코어 폰트만 사용. 본문은 Pretendard 우선.
-- **129개+**: 풀팩 설치됨. NanumBarunGothic·NotoSansKR variable·옛한글 등 자유롭게 선택.
-
-**원하는 폰트가 코어에 없는 경우** — 다음 안내 메시지를 사용자에게 출력:
-
-> "이 디자인은 풀 폰트팩의 `<폰트명>`을 활용하면 더 좋습니다. 풀팩 설치는 `bash scripts/install_full_fonts.sh` (또는 Windows: `.\scripts\install_full_fonts.ps1`)로 진행할 수 있습니다. 일단 코어 폰트인 `<대체 폰트>`로 작업을 진행하겠습니다."
-
-대체 폰트는 아래 폴백 표를 참고.
-
-### 코어 → 풀팩 폴백 매핑 (요청 폰트가 코어에 없을 때 즉시 대체)
-
-| 풀팩 폰트 (없을 때) | 코어 대체 폰트 | 비고 |
+| 요청 폰트 (풀팩 전용) | 코어 대체 폰트 | 비고 |
 |---|---|---|
-| NanumBarunGothic 시리즈 | **NanumGothic-Light** | 행정 본문 느낌 유지 |
-| NotoSansKR variable | **Pretendard-Regular** | 한·영 통합 본문 |
-| NotoSerifKR variable | **NanumMyeongjo-Regular** | 명조 본문 |
-| GowunBatang Bold | **NanumMyeongjo-Regular** | 격조 명조 |
-| GowunDodum | **Pretendard-Regular** | 단아한 산세리프 |
-| Pretendard Light/Medium | **Pretendard-Regular** | 코어는 R/B/Black만 |
-| NanumSquare Light/ExtraBold | **NanumSquare-Regular/Bold** | 코어는 R/B만 |
-| NanumSquareRound Light/ExtraBold | **NanumSquareRound-Regular/Bold** | 코어는 R/B만 |
-| NanumSquareNeo Light/ExtraBold/Heavy | **NanumSquareNeo-Regular/Bold** | 코어는 R/B만 |
-| NanumGothic Bold/ExtraBold | **NanumGothic-Light + Pretendard-Bold** | |
-| NanumMyeongjo Bold/ExtraBold | **NanumMyeongjo-Regular** + 굵게 처리 | |
-| NanumGothicEco / NanumMyeongjoEco | **NanumGothic-Light** / **NanumMyeongjo-Regular** | 에코 패턴은 풀팩 전용 |
-| NanumBrushScript / NanumPenScript / NanumBarunpen | (코어에 캘리 없음) | **캘리그래피는 풀팩 필수** |
-| 옛한글 폰트 (NanumMyeongjo-OldHangul) | **NanumMyeongjo-Regular** | 옛한글은 풀팩 전용 — 표시 시 사용자에게 명시 |
-| JejuGothic / JejuMyeongjo / JejuHallasan | **NanumGothic-Light** / **NanumMyeongjo-Regular** | 향토 디스플레이는 풀팩 전용 |
-| SongMyung | **NanumMyeongjo-Regular** | 모던 명조 대체 |
-| Jua / YeonSung / Gaegu / PoorStory | **BlackHanSans** / **DoHyeon** / **Sunflower-Bold** | 친근 디스플레이 대체 |
-| Hahmlet / Diphylleia | **NanumMyeongjo-Regular** | 모던 명조 대체 |
-| D2Coding | **JetBrainsMono-Regular** | 코딩 모노 대체 |
-| EastSeaDokdo / CuteFont | **Sunflower-Bold** | 손글씨/귀여운 대체 |
-| BlackAndWhitePicture | (대체 없음) | 이미지 폰트 — 풀팩 전용 |
+| **Pretendard** (Light/Regular/Medium/Bold/Black) | **NotoSansKR-VF** | 가변 축으로 굵기 조절, 한·영·한자 통합 |
+| **NanumGothic** (Light/Regular/Bold/ExtraBold) | **NotoSansKR-VF** | 서브셋 → 가변 산세리프 대체 |
+| **NanumSquare/Round/Neo** 시리즈 | **NotoSansKR-VF** | 모던 산세리프는 NotoSansKR로 통합 |
+| **NanumMyeongjo-Regular/Bold** | **NanumMyeongjo-OldHangul** | 옛한글 포함 명조 대체 |
+| **NanumBarunGothic** 시리즈 | **NotoSansKR-VF** | 행정 본문도 NotoSansKR로 |
+| **BlackHanSans / DoHyeon / Jua** | **NotoSansKR-VF weight=900** | 임팩트는 NotoSansKR 900 활용 |
+| **Sunflower-Bold** | **JejuGothic-Regular** | 향토 디스플레이 대체 |
+| **NanumGothicEco / NanumMyeongjoEco** | **NotoSansKR-VF** / **NanumMyeongjo-OldHangul** | 에코 패턴은 풀팩 전용 |
+| **NanumBarunpen / NanumPenScript 풀버전** | **NanumPenScript-Regular** (이미 코어) | 코어에 기본 포함 |
+| **GowunBatang / GowunDodum** | **NanumMyeongjo-OldHangul** / **NotoSansKR-VF** | 단아한 대체 |
+| **SongMyung / Hahmlet / Diphylleia** | **NanumMyeongjo-OldHangul** | 모던 명조 대체 |
+| **JejuMyeongjo / JejuHallasan** | **JejuGothic-Regular** | 제주 시리즈는 JejuGothic 대체 |
+| **NotoSerifKR** | **NanumMyeongjo-OldHangul** | 명조 본문 대체 |
+| **WorkSans / Lora / Italiana / BigShoulders / InstrumentSerif / JetBrainsMono** | (영문 전용 없음) | **NotoSansKR-VF** 영문 지원 활용, 또는 풀팩 설치 |
+| **NanumMyeongjo-OldHangul** | (이미 코어) | 코어에 기본 포함 |
+| **D2Coding** | (코어에 모노스페이스 없음) | **풀팩 필수** |
+| **BlackAndWhitePicture / EastSeaDokdo / CuteFont** | (이미지/친근 폰트) | **풀팩 필수**, 대체 불가 |
+
+**중요**: v1.0.x와 달리 v1.1.0 코어에는 영문 전용 폰트가 없다. 영문 전용 디자인이 필요하면 `NotoSansKR-VF.ttf`의 라틴 글리프를 사용하거나 풀팩을 설치한다.
 
 ---
 
@@ -135,19 +260,19 @@ The philosophy must guide the canvas step to express ideas VISUALLY, not through
 ### PHILOSOPHY EXAMPLES — KOREAN (5)
 
 **"餘白 (Yeobaek) — Empty Fullness"**
-Communication through what is *not* placed. The aesthetic of Joseon white porcelain (조선백자) and ink-wash landscape — where 7/10ths of the canvas remains untouched and the single placed mark gains immense weight. Vast cream/off-white expanses (paper-white #FAF6EE / 한지색), one or two restrained gestures placed with calligraphic intent, asymmetric balance leaning toward the corners. Typography whispered in NanumMyeongjo / SongMyung — small, often vertical, never centered. The composition must feel as if a master spent days deciding where the single brushstroke would fall.
+Communication through what is *not* placed. The aesthetic of Joseon white porcelain (조선백자) and ink-wash landscape — where 7/10ths of the canvas remains untouched and the single placed mark gains immense weight. Vast cream/off-white expanses (paper-white #FAF6EE / 한지색), one or two restrained gestures placed with calligraphic intent, asymmetric balance leaning toward the corners. Typography whispered in NanumMyeongjo-OldHangul — small, often vertical, never centered. The composition must feel as if a master spent days deciding where the single brushstroke would fall.
 
 **"丹靑 (Dancheong) — Sacred Geometry"**
-The five-color (오방색 — 靑赤黃白黑) cosmology of palace eaves and temple beams, organized as ritual pattern. Tightly repeated geometric motifs (lotus, swastika, cloud, peony) in saturated cinnabar (#C8102E), cobalt (#003F87), chrome yellow (#FFD100), bone white, and lacquer black. Bold field divisions like a 단청 panel — never gradients, only flat planes meeting at sharp seams. Typography in BlackHanSans or DoHyeon, set as a single declarative word. The piece should look hand-painted by a master 단청장.
+The five-color (오방색 — 靑赤黃白黑) cosmology of palace eaves and temple beams, organized as ritual pattern. Tightly repeated geometric motifs (lotus, swastika, cloud, peony) in saturated cinnabar (#C8102E), cobalt (#003F87), chrome yellow (#FFD100), bone white, and lacquer black. Bold field divisions like a 단청 panel — never gradients, only flat planes meeting at sharp seams. Typography in NotoSansKR with weight 900 (via variation axis), set as a single declarative word. The piece should look hand-painted by a master 단청장.
 
 **"縫補 (Jogakbo) — Quilted Composition"**
-The improvised geometry of Joseon wrapping cloth (조각보), where leftover silk scraps were stitched into accidentally-perfect color fields. Irregular rectangular blocks tiling the canvas in muted naturally-dyed palette (쪽빛 indigo, 치자 gardenia yellow, 홍화 safflower pink, 먹 ink, 모시 ramie cream). Visible "stitch lines" of 1–2 px between blocks. Tiny seal-script-like type marks placed inside one or two blocks with NanumMyeongjo. The result must feel like an heirloom: the labor of a thousand small decisions, each meticulously crafted.
+The improvised geometry of Joseon wrapping cloth (조각보), where leftover silk scraps were stitched into accidentally-perfect color fields. Irregular rectangular blocks tiling the canvas in muted naturally-dyed palette (쪽빛 indigo, 치자 gardenia yellow, 홍화 safflower pink, 먹 ink, 모시 ramie cream). Visible "stitch lines" of 1–2 px between blocks. Tiny seal-script-like type marks placed inside one or two blocks with NanumMyeongjo-OldHangul. The result must feel like an heirloom: the labor of a thousand small decisions, each meticulously crafted.
 
 **"古調 (Gojo) — Korean Quietude"**
-Contemporary K-minimalism — the language of artists like Lee Ufan, Park Seo-bo, and the architecture of Seung H-Sang. Monochromatic stone, ash, raw linen, soot. One central form (a circle, a horizontal line, a single word) given the entire stage. Generous margins (15% minimum on all sides). Typography in Pretendard Light or NanumSquareRound Light, set incredibly small relative to the negative space. The piece communicates through the *quality of stillness*.
+Contemporary K-minimalism — the language of artists like Lee Ufan, Park Seo-bo, and the architecture of Seung H-Sang. Monochromatic stone, ash, raw linen, soot. One central form (a circle, a horizontal line, a single word) given the entire stage. Generous margins (15% minimum on all sides). Typography in NotoSansKR at light weight (variation axis 300), set incredibly small relative to the negative space. The piece communicates through the *quality of stillness*.
 
 **"餘湍 (Yeotan) — Currents"**
-The flow of ink in 한지 (Korean mulberry paper) — controlled bleeds, the moment when wet meets fiber. Organic ink-wash gradients, edges that diffuse rather than terminate, layered transparencies in sumi black, indigo, and tea brown. Underlying compositional grid (golden ratio or 3:5 division) anchors the chaos. Typography appears as if painted with the same brush — NanumBrushScript, set vertically along the right edge.
+The flow of ink in 한지 (Korean mulberry paper) — controlled bleeds, the moment when wet meets fiber. Organic ink-wash gradients, edges that diffuse rather than terminate, layered transparencies in sumi black, indigo, and tea brown. Underlying compositional grid (golden ratio or 3:5 division) anchors the chaos. Typography appears as if painted with the same brush — NanumBrushScript-Regular, set vertically along the right edge.
 
 *These are condensed examples. Actual philosophies should be 4–6 substantial paragraphs.*
 
@@ -185,71 +310,59 @@ Generally use repeating patterns and perfect shapes. Treat the abstract philosop
 
 Text is always minimal and visual-first, but context guides scale. Most of the time, fonts should be **thin**. **Nothing falls off the page and nothing overlaps.** Every element must be contained within the canvas with proper margins.
 
-**Use distinct fonts.** Reference them from `assets/fonts/` directory.
+**Use distinct fonts.** Reference them via `os.path.join(FONT_DIR, "<filename>")` — never with relative paths.
 
 ---
 
-## HANGUL TYPOGRAPHY RULES
+## HANGUL + CJK TYPOGRAPHY RULES
 
 ### Mandatory rule
-**Any Hangul (한글) glyph in the composition MUST be rendered with a Hangul-supporting font.** Latin-only fonts (WorkSans, Lora, Italiana, BigShoulders, InstrumentSerif, JetBrainsMono) DO NOT contain Hangul glyphs and will fall back to system defaults — destroying design intent. Always pair the right font to the script.
+**Any Hangul (한글) or CJK (한자/漢字) glyph in the composition MUST be rendered with a CJK-capable font.** v1.1.0 코어 5종은 모두 CJK 완전 지원 — 이 문제는 코어에서 근본적으로 해결되었다.
 
-### Core font selection guide (24 bundled fonts)
+### Core font selection guide (v1.1.0, 5 fonts)
 
-**Body sans-serif (한·영 통합)**
+**Body sans-serif (한·영·한자 통합)**
 
-| Use case | Recommended font |
+| Use case | Font | Variation weight |
+|---|---|---|
+| All-purpose body | **NotoSansKR-VF.ttf** | 400 (Regular) |
+| Light display | **NotoSansKR-VF.ttf** | 300 (Light) |
+| Bold impact | **NotoSansKR-VF.ttf** | 700 (Bold) |
+| Maximum impact (丹靑) | **NotoSansKR-VF.ttf** | 900 (Black) |
+
+**Body serif / 옛한글 / 한문**
+
+| Use case | Font |
 |---|---|
-| All-purpose, modern body | **Pretendard** Regular/Bold/Black |
-| Modern K-corporate | **NanumSquareNeo** Regular/Bold |
-| Modern, clean (가벼움) | **NanumSquare** Regular/Bold |
-| Friendly, rounded | **NanumSquareRound** Regular/Bold |
-| Humanist warmth | **NanumHuman** Light/Regular/Bold |
-| Classical Nanum baseline | **NanumGothic-Light** |
+| Classical body serif | **NanumMyeongjo-OldHangul.ttf** |
+| Display serif (餘白) | **NanumMyeongjo-OldHangul.ttf** + larger size |
+| 옛한글 (중세 국어) | **NanumMyeongjo-OldHangul.ttf** |
+| 한문 서예 (활자) | **NanumMyeongjo-OldHangul.ttf** |
 
-**Body serif (명조)**
+**Calligraphy / handwriting / 붓글씨**
 
-| Use case | Recommended font |
+| Use case | Font |
 |---|---|
-| Classical, refined body | **NanumMyeongjo-Regular** |
-| Display serif (餘白) | **NanumMyeongjo-Regular** + larger size |
-| Modern serif display | **NanumMyeongjo-Regular** (SongMyung은 풀팩 전용) |
+| Brush stroke (餘湍, 발묵) | **NanumBrushScript-Regular.ttf** |
+| Pen script (손글씨) | **NanumPenScript-Regular.ttf** |
+| 한자 서예 | **NanumBrushScript-Regular.ttf** |
 
-**Display / impact**
+**Display / 향토 / 지역성**
 
-| Use case | Recommended font |
+| Use case | Font |
 |---|---|
-| Maximum impact (丹靑) | **BlackHanSans** / **DoHyeon** |
-| Friendly display (民畵) | **Sunflower-Bold** (Jua/YeonSung은 풀팩 전용) |
-| Pseudo-traditional | **NanumMyeongjo-Regular** + 큰 사이즈 (JejuGothic/SongMyung은 풀팩) |
+| 제주 향토 디스플레이 | **JejuGothic-Regular.ttf** |
+| 지역 특화 포스터 | **JejuGothic-Regular.ttf** |
 
-**Calligraphy / handwriting**
+> **Latin 전용 폰트가 필요하면**: 코어 v1.1.0은 Latin 전용 폰트를 포함하지 않음. NotoSansKR의 라틴 글리프로 대체하거나, Claude Code 환경에서 풀팩 설치(`bash scripts/install_full_fonts.sh`) 후 WorkSans/Lora/Italiana 등을 사용.
 
-| Use case | Recommended font |
-|---|---|
-| Brush stroke (餘湍, 발묵) | (코어에 없음 — 풀팩의 **NanumBrushScript** 필요) |
-| Pen script | (코어에 없음 — 풀팩의 **NanumPenScript** / **NanumBarunpen** 필요) |
+### Hangul–Latin–CJK mixing (한·영·한자 혼용)
 
-> **캘리그래피 작업 시**: 코어에는 캘리그래피 폰트가 포함되지 않습니다. 풀팩 설치(`bash scripts/install_full_fonts.sh`) 후 NanumBrushScript/NanumPenScript 등을 사용할 수 있습니다. 코어만으로는 BlackHanSans + 큰 사이즈 + 여백 처리로 유사한 임팩트를 내거나 사용자에게 풀팩 설치를 안내할 것.
+**Option A — Single unified font (strongly recommended for v1.1.0):** `NotoSansKR-VF.ttf` contains high-quality Hangul, Latin, AND CJK glyphs — use it alone for clean mixed text.
 
-**Latin / English (Pretendard로 한·영 통합 가능)**
-
-| Use case | Recommended font |
-|---|---|
-| Sans-serif body | **Pretendard** (primary) / **WorkSans** Regular/Bold |
-| Serif body/display | **Lora-Regular** |
-| Editorial display serif | **Italiana-Regular** / **InstrumentSerif** |
-| Bold display sans | **BigShoulders-Bold** |
-| Monospace | **JetBrainsMono-Regular** |
-
-### Hangul–Latin mixing (한·영 혼용)
-
-**Option A — Single unified font (recommended):** Pretendard contains both Hangul and high-quality Latin glyphs — use it alone for clean mixed text.
-
-**Option B — Paired fonts:** When pairing a Hangul font with a separate Latin font:
-- Hangul 100% : Latin 95% (산세리프 — NanumGothic + WorkSans)
-- Hangul 100% : Latin 90% (명조 — NanumMyeongjo + Lora)
-- Vertical center alignment of Latin glyphs against Hangul body
+**Option B — Paired fonts:** 명조 본문과 산세리프 혼용 시:
+- 본문 명조: `NanumMyeongjo-OldHangul.ttf`
+- 헤더 산세리프: `NotoSansKR-VF.ttf` (weight 700)
 
 **Hangul-friendly line-height:** 1.5–1.7 for body text (Hangul characters are visually heavier than Latin).
 
@@ -258,11 +371,13 @@ Text is always minimal and visual-first, but context guides scale. Most of the t
 For 餘白 / 餘湍 / classical compositions:
 
 ```python
+import os
 from PIL import Image, ImageDraw, ImageFont
+# SKILL_ROOT, FONT_DIR는 STEP 0에서 결정된 절대경로 변수
 img = Image.new("RGB", (800, 1200), "#FAF6EE")
 draw = ImageDraw.Draw(img)
-font = ImageFont.truetype("./assets/fonts/NanumMyeongjo-Regular.ttf", 56)
-text = "餘白"
+font = ImageFont.truetype(os.path.join(FONT_DIR, "NanumMyeongjo-OldHangul.ttf"), 56)
+text = "餘白"  # 코어에서 즉시 렌더링 — 한자 완전 지원
 x, y = 700, 100   # right side, top
 for ch in text:
     draw.text((x, y), ch, font=font, fill="#1a1a1a")
@@ -271,7 +386,7 @@ for ch in text:
 img.save("yeobaek.png")
 ```
 
-Do NOT rotate Hangul glyphs — they are designed for both horizontal and vertical reading without rotation.
+Do NOT rotate Hangul or CJK glyphs — they are designed for both horizontal and vertical reading without rotation.
 
 ---
 
@@ -295,27 +410,25 @@ Do NOT rotate Hangul glyphs — they are designed for both horizontal and vertic
 
 ## DOWNLOAD AND USE FONTS
 
-The `assets/fonts/` directory contains 24 core fonts. Reference them by relative path:
+폰트 파일 위치는 ⛔ RULE 0의 디스커버리로 결정된 `FONT_DIR` 절대경로 변수를 항상 사용한다. 코어 5종은 즉시 사용 가능, 풀팩 124종은 Claude Code 환경에서 별도 설치.
 
-```python
-ImageFont.truetype("./assets/fonts/Pretendard-Bold.otf", 64)
-```
+### Optional: Install Full Font Pack (124 additional fonts) — Claude Code 전용
 
-Make typography PART of the art (brought into the composition, not just typeset digitally).
-
-### Optional: Install Full Font Pack (105 additional fonts)
-
-For 옛한글, 에코 패턴, NanumBarunGothic, NotoSansKR variable, GowunBatang, JejuMyeongjo, BlackAndWhitePicture 등을 사용하려면:
+Pretendard, NanumSquare 시리즈, NanumGothic, 에코 패턴, 고운글꼴, 제주글꼴 풀세트 등이 필요하면:
 
 ```bash
-# Linux / macOS / Synology NAS
+# Linux / macOS / Synology NAS / WSL (Claude Code 환경)
 bash scripts/install_full_fonts.sh
 
-# Windows (PowerShell)
+# Windows (PowerShell, Claude Code 환경)
 .\scripts\install_full_fonts.ps1
 ```
 
-설치 후 폰트 총 개수가 24 → 129개로 확장됩니다. 항상 STEP 0의 폰트 탐색을 통해 현재 사용 가능한 폰트를 확인하세요.
+설치 후 폰트 총 개수가 5 → 129개로 확장된다. 인스톨러는 설치 완료 시 `assets/fonts/MANIFEST.txt`를 자동 갱신하므로, 풀팩 설치 후에는 RULE 0의 디스커버리를 다시 실행하여 새 `FONTS` 목록을 반영한다.
+
+> **풀팩 ZIP 빌드 (유지보수자용)**: GitHub Release에 올릴 풀팩 ZIP은 로컬에 129종이 설치된 상태에서 `scripts/build_full_pack.sh` 또는 `scripts/build_full_pack.ps1`로 생성한다. 결과물은 코어 5종을 제외한 124종 + OFL 라이선스를 담은 `canvas-design-kr-fonts-full-v1.1.0.zip`.
+
+> **Claude Desktop / claude.ai 웹 사용자**: 이 환경은 ZIP 업로드만 지원하며 스크립트 실행이 불가능하다. 풀팩이 필요하면 Claude Code 환경에서 설치 후 NAS·로컬 디렉터리를 공유하거나, 필요한 풀팩 폰트가 번들된 별도 ZIP을 제작해 업로드한다.
 
 ---
 

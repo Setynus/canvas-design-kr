@@ -4,7 +4,7 @@
 # 사용법:
 #   bash scripts/install_full_fonts.sh
 #   bash scripts/install_full_fonts.sh --check    # 상태 확인만
-#   bash scripts/install_full_fonts.sh --version v1.0.2
+#   bash scripts/install_full_fonts.sh --version v1.1.0
 #
 # 환경변수:
 #   CANVAS_DESIGN_KR_FONT_PACK_URL   직접 URL 지정 (기본값 무시)
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 # ─────────────── 설정 ───────────────
-DEFAULT_VERSION="v1.0.2"
+DEFAULT_VERSION="v1.1.0"
 GITHUB_REPO="Setynus/canvas-design-kr"
 ASSET_NAME_TEMPLATE="canvas-design-kr-fonts-full-{version}.zip"
 
@@ -25,7 +25,7 @@ while [[ $# -gt 0 ]]; do
         --check) CHECK_ONLY=1; shift ;;
         --version) VERSION="$2"; shift 2 ;;
         --help|-h)
-            sed -n '2,8p' "$0"; exit 0 ;;
+            sed -n '2,12p' "$0"; exit 0 ;;
         *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
@@ -48,7 +48,7 @@ echo "설치 경로: $INSTALL_DIR"
 
 if [ "$CHECK_ONLY" -eq 1 ]; then
     echo ""
-    echo "── 코어 폰트 (이미 번들됨) ──"
+    echo "── 설치된 폰트 ──"
     find "$INSTALL_DIR" -maxdepth 1 -type f \( -name "*.ttf" -o -name "*.otf" \) -printf "  %f\n" | sort | head -40
     if [ "$COUNT_BEFORE" -gt 40 ]; then
         echo "  ... ($COUNT_BEFORE 개 중 40개 표시)"
@@ -103,6 +103,16 @@ else
     fi
 fi
 
+# ZIP 크기 검증
+ZIP_SIZE=$(stat -c%s "$ZIP_PATH" 2>/dev/null || stat -f%z "$ZIP_PATH" 2>/dev/null || echo 0)
+if [ "$ZIP_SIZE" -lt 1048576 ]; then
+    echo "ERROR: 다운로드된 ZIP이 너무 작습니다 ($ZIP_SIZE 바이트)."
+    echo "       GitHub Release Asset이 존재하지 않거나 리다이렉트일 가능성."
+    echo "       URL 확인: $URL"
+    exit 1
+fi
+echo "  다운로드 완료: $(echo "scale=1; $ZIP_SIZE / 1048576" | bc 2>/dev/null || echo "$ZIP_SIZE B") MB"
+
 # ─────────────── 압축 해제 + 설치 ───────────────
 echo ""
 echo "▶ 압축 해제 중..."
@@ -139,5 +149,24 @@ echo "✓ 완료"
 echo "  새로 설치: $INSTALLED 개 파일"
 echo "  이미 존재(스킵): $SKIPPED 개 파일"
 echo "  현재 폰트 총 개수: $COUNT_BEFORE → $COUNT_AFTER"
+
+# ─────────────── MANIFEST.txt 갱신 ───────────────
+MANIFEST_PATH="$INSTALL_DIR/MANIFEST.txt"
+if [ "$COUNT_AFTER" -ge 100 ]; then
+    PACK="full"
+else
+    PACK="core"
+fi
+{
+    echo "# canvas-design-kr — Font Manifest (auto-updated by install_full_fonts.sh)"
+    echo "# 마지막 갱신: $(date '+%Y-%m-%d %H:%M') (Version: $VERSION)"
+    echo "# Pack: $PACK ($COUNT_AFTER files)"
+    echo ""
+    find "$INSTALL_DIR" -maxdepth 1 -type f \( -name "*.ttf" -o -name "*.otf" \) -printf "%f\n" \
+        | sort | sed "s/^/${PACK}:/"
+} > "$MANIFEST_PATH" 2>/dev/null && \
+    echo "  MANIFEST.txt 갱신 완료 ($COUNT_AFTER 항목)" || \
+    echo "  WARN: MANIFEST.txt 갱신 실패"
+
 echo ""
-echo "이제 canvas-design-kr이 모든 한글·영문 폰트를 사용할 수 있습니다."
+echo "이제 canvas-design-kr이 모든 한글·영문·한자 폰트를 사용할 수 있습니다."
