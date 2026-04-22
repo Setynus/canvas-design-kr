@@ -103,20 +103,20 @@ cd "$env:USERPROFILE\.claude\skills\canvas-design-kr"
 
 **상태 확인:**
 ```bash
-bash scripts/install_full_fonts.sh --check       # Linux/macOS
-.\scripts\install_full_fonts.ps1 -Check          # Windows
+bash scripts/install_full_fonts.sh --check                # Linux/macOS
+.\scripts\install_full_fonts.ps1 -Check                   # Windows
 ```
 
 **폰트 디스커버리 (Claude가 폰트를 못 찾을 때 디버깅용):**
 ```bash
 python3 scripts/discover_fonts.py
-python3 scripts/discover_fonts.py --json     # JSON 출력
-python3 scripts/discover_fonts.py --paths    # KEY=VALUE 출력
+python3 scripts/discover_fonts.py --json                  # JSON 출력
+python3 scripts/discover_fonts.py --paths                 # KEY=VALUE 출력
 ```
 
 **CJK 한자 지원 실측 (폰트 추가·교체 시 검증):**
 ```bash
-pip install fonttools --break-system-packages   # 최초 1회
+pip install fonttools --break-system-packages             # 최초 1회
 python3 scripts/verify_cjk_support.py                     # 스킬 디렉터리 자동 탐색
 python3 scripts/verify_cjk_support.py <font_dir>          # 경로 명시
 python3 scripts/verify_cjk_support.py --json              # 빌드 스크립트용
