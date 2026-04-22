@@ -18,7 +18,7 @@
 ### 구 v1.0.x 코어 (24종) → 신 v1.1.0 코어 (5종)
 
 | 구분 | v1.0.x | v1.1.0 |
-|---|---|---|
+| --- | --- | --- |
 | 코어 폰트 수 | 24종 | 5종 |
 | 코어 용량 | ~23 MB | ~28.5 MB |
 | CJK 한자 지원 | ❌ 0/24 | ✅ 5/5 |
@@ -28,7 +28,7 @@
 ### 새 코어 5종
 
 | 파일명 | 크기 | 용도 | CJK |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `NotoSansKR-VF.ttf` | 9.93 MB | 가변 산세리프 (모든 weight) | ✅ 8,566자 |
 | `NanumMyeongjo-OldHangul.ttf` | 9.25 MB | 명조 + 옛한글 + 한문 | ✅ 5,005자 |
 | `NanumBrushScript-Regular.ttf` | 3.66 MB | 붓글씨 캘리그래피 | ✅ 4,888자 |
@@ -67,7 +67,7 @@ Claude Code는 `~/.claude/skills/` 하위 디렉터리를 자동 감시하므로
 
 ### 2. Claude Desktop — ZIP 업로드
 
-```
+```text
 설정 → Skills → "Add Skill" 또는 "Upload Skill"
 → canvas-design-kr-v1.1.0.zip 파일 선택
 ```
@@ -78,7 +78,7 @@ Claude Desktop은 업로드된 ZIP을 내부 저장소로 복사하여 **스냅�
 
 ### 3. claude.ai 웹 — ZIP 업로드
 
-```
+```text
 설정 → Skills → "Add Skill" 또는 "Upload Skill"
 → canvas-design-kr-v1.1.0.zip 파일 선택
 ```
@@ -102,12 +102,14 @@ cd "$env:USERPROFILE\.claude\skills\canvas-design-kr"
 ```
 
 **상태 확인:**
+
 ```bash
 bash scripts/install_full_fonts.sh --check                # Linux/macOS
 .\scripts\install_full_fonts.ps1 -Check                   # Windows
 ```
 
 **폰트 디스커버리 (Claude가 폰트를 못 찾을 때 디버깅용):**
+
 ```bash
 python3 scripts/discover_fonts.py
 python3 scripts/discover_fonts.py --json                  # JSON 출력
@@ -115,6 +117,7 @@ python3 scripts/discover_fonts.py --paths                 # KEY=VALUE 출력
 ```
 
 **CJK 한자 지원 실측 (폰트 추가·교체 시 검증):**
+
 ```bash
 pip install fonttools --break-system-packages             # 최초 1회
 python3 scripts/verify_cjk_support.py                     # 스킬 디렉터리 자동 탐색
@@ -163,7 +166,7 @@ bash scripts/build_full_pack.sh --output canvas-design-kr-fonts-full-v1.1.0.zip
 
 ## 디렉토리 구조
 
-```
+```text
 canvas-design-kr/
 ├── SKILL.md                              # 스킬 본문 (RULE 0 + RULE 1 + 5종 매니페스트)
 ├── LICENSE.txt                           # Apache License 2.0
@@ -196,7 +199,7 @@ canvas-design-kr/
 ## 한국 미학 디자인 철학 (Korean Aesthetic Philosophies)
 
 | 명칭 | 영문 | 미학적 뿌리 | 시각 어휘 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **餘白** Yeobaek | Empty Fullness | 조선백자, 수묵 산수 | 광대한 여백, 단일 요소 배치, 비대칭 |
 | **丹靑** Dancheong | Sacred Geometry | 궁궐 처마, 사찰 단청 | 오방색, 평면 색면, 기하 패턴 반복 |
 | **縫補** Jogakbo | Quilted Composition | 조선 조각보, 자연 염색 | 비대칭 색 블록, 자투리 미감 |
@@ -210,7 +213,7 @@ canvas-design-kr/
 ## 코어 폰트 선택 가이드 (v1.1.0 — 5종)
 
 | 용도 | 폰트 | 비고 |
-|---|---|---|
+| --- | --- | --- |
 | 기본 본문 (한·영·한자) | **NotoSansKR-VF.ttf** | 가변 폰트, weight 100–900 |
 | 명조 본문 / 옛한글 / 한문 | **NanumMyeongjo-OldHangul.ttf** | 餘白, 縫補 |
 | 붓글씨 캘리그래피 / 발묵 | **NanumBrushScript-Regular.ttf** | 餘湍 |
@@ -257,16 +260,18 @@ except AttributeError:
 ## 한국 색채 시스템
 
 ### 오방색 (Five Cardinal Colors)
+
 靑 `#003F87` · 赤 `#C8102E` · 黃 `#FFD100` · 白 `#F5F2E8` · 黑 `#1A1A1A`
 
 ### 자연 염색 팔레트
+
 쪽 `#1F3A5F` · 치자 `#E8C547` · 홍화 `#D9777A` · 먹 `#2B2926` · 모시 `#F2EBD8` · 황토 `#B07F4A` · 한지 `#FAF6EE`
 
 ---
 
 ## 사용 예시
 
-```
+```text
 "한국적인 느낌의 포스터 한 장 만들어줘. 주제는 '봄비'."
 "단청 색상으로 워크숍 안내 포스터를 디자인해 줘."
 "여백의 미를 살린 미니멀한 PDF 한 장."
@@ -282,7 +287,7 @@ except AttributeError:
 v1.0.x 디자인 코드를 v1.1.0에서 실행하면 폰트 파일명이 바뀌어 실패합니다. 다음 치환이 필요합니다:
 
 | v1.0.x 폰트 | v1.1.0 치환 | 비고 |
-|---|---|---|
+| --- | --- | --- |
 | `Pretendard-Regular.otf` | `NotoSansKR-VF.ttf` (weight=400) | 가변 폰트로 통합 |
 | `Pretendard-Bold.otf` | `NotoSansKR-VF.ttf` (weight=700) | 가변 weight |
 | `Pretendard-Black.otf` | `NotoSansKR-VF.ttf` (weight=900) | 가변 weight |
@@ -302,10 +307,13 @@ v1.0.x 디자인 코드를 v1.1.0에서 실행하면 폰트 파일명이 바뀌�
 ## 라이선스
 
 ### 스킬 코드
+
 **Apache License, Version 2.0** — `LICENSE.txt`
 
 ### 번들 폰트 (코어 + 풀팩)
+
 모두 **SIL Open Font License 1.1** — `assets/fonts/<폰트>-OFL.txt`
+
 - 상업 사용·임베딩·재배포 가능
 - Reserved Font Name 변경 사용 금지
 
