@@ -103,20 +103,20 @@ cd "$env:USERPROFILE\.claude\skills\canvas-design-kr"
 
 **상태 확인:**
 ```bash
-bash scripts/install_full_fonts.sh --check       # Linux/macOS
-.\scripts\install_full_fonts.ps1 -Check          # Windows
+bash scripts/install_full_fonts.sh --check                # Linux/macOS
+.\scripts\install_full_fonts.ps1 -Check                   # Windows
 ```
 
 **폰트 디스커버리 (Claude가 폰트를 못 찾을 때 디버깅용):**
 ```bash
 python3 scripts/discover_fonts.py
-python3 scripts/discover_fonts.py --json     # JSON 출력
-python3 scripts/discover_fonts.py --paths    # KEY=VALUE 출력
+python3 scripts/discover_fonts.py --json                  # JSON 출력
+python3 scripts/discover_fonts.py --paths                 # KEY=VALUE 출력
 ```
 
 **CJK 한자 지원 실측 (폰트 추가·교체 시 검증):**
 ```bash
-pip install fonttools --break-system-packages   # 최초 1회
+pip install fonttools --break-system-packages             # 최초 1회
 python3 scripts/verify_cjk_support.py                     # 스킬 디렉터리 자동 탐색
 python3 scripts/verify_cjk_support.py <font_dir>          # 경로 명시
 python3 scripts/verify_cjk_support.py --json              # 빌드 스크립트용
@@ -165,28 +165,28 @@ bash scripts/build_full_pack.sh --output canvas-design-kr-fonts-full-v1.1.0.zip
 
 ```
 canvas-design-kr/
-├── SKILL.md                       # 스킬 본문 (RULE 0 + RULE 1 + 5종 매니페스트)
-├── LICENSE.txt                    # Apache License 2.0
-├── LICENSE-canvas-design.txt      # 원본 Anthropic 라이선스 보존
-├── NOTICE.txt                     # 변경 이력 + 라이선스 속성
-├── README.md                      # 이 파일
-├── changelog.md                   # 버전 히스토리
+├── SKILL.md                              # 스킬 본문 (RULE 0 + RULE 1 + 5종 매니페스트)
+├── LICENSE.txt                           # Apache License 2.0
+├── LICENSE-canvas-design.txt             # 원본 Anthropic 라이선스 보존
+├── NOTICE.txt                            # 변경 이력 + 라이선스 속성
+├── README.md                             # 이 파일
+├── changelog.md                          # 버전 히스토리
 ├── assets/
-│   └── fonts/                     # 코어 5종 (CJK 완전 지원, 즉시 사용 가능)
-│       ├── MANIFEST.txt           # ★ 폰트 파일 목록 평문 (인스톨러가 자동 갱신)
-│       ├── NotoSansKR-VF.ttf          # 9.93 MB
+│   └── fonts/                            # 코어 5종 (CJK 완전 지원, 즉시 사용 가능)
+│       ├── MANIFEST.txt                  # ★ 폰트 파일 목록 평문 (인스톨러가 자동 갱신)
+│       ├── NotoSansKR-VF.ttf             # 9.93 MB
 │       ├── NanumMyeongjo-OldHangul.ttf   # 9.25 MB
 │       ├── NanumBrushScript-Regular.ttf  # 3.66 MB
 │       ├── NanumPenScript-Regular.ttf    # 3.47 MB
 │       ├── JejuGothic-Regular.ttf        # 2.42 MB
-│       └── *-OFL.txt              # 라이선스 파일
+│       └── *-OFL.txt                     # 라이선스 파일
 └── scripts/
     ├── discover_fonts.py                 # ★ 폰트 디스커버리 (RULE 0 권장)
     ├── verify_cjk_support.py             # ★ CJK 한자 지원 실측 (fontTools cmap 파싱)
     ├── build_core_from_fullpack.sh       # ★ 코어 ZIP 빌드 (Linux/macOS)
     ├── build_core_from_fullpack.ps1      # ★ 코어 ZIP 빌드 (Windows)
     ├── build_full_pack.sh                # ★ 풀팩 ZIP 빌드 (Linux/macOS)
-    ├── build_full_pack.ps1                # ★ 풀팩 ZIP 빌드 (Windows)
+    ├── build_full_pack.ps1               # ★ 풀팩 ZIP 빌드 (Windows)
     ├── install_full_fonts.sh             # 풀팩 설치 (Linux/macOS)
     └── install_full_fonts.ps1            # 풀팩 설치 (Windows)
 ```
@@ -272,7 +272,7 @@ except AttributeError:
 "여백의 미를 살린 미니멀한 PDF 한 장."
 "조각보 스타일로 4월 행사 일정표를 PNG로."
 "한지에 먹으로 쓴 듯한 캘리그래피, '無爲' 두 글자."  # ← v1.1.0부터 코어에서 즉시 렌더링
-"'餘白' 세로쓰기 명조로 포스터."                    # ← 한자 코어 지원
+"'餘白' 세로쓰기 명조로 포스터."                     # ← 한자 코어 지원
 ```
 
 ---
