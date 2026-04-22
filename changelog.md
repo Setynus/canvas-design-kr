@@ -27,6 +27,7 @@ original creation date; `metadata.updated` refreshed per change.
 파일명만 바뀌었으므로 가변 축(`wght` 100–900) 기능은 완전히 유지된다.
 
 **영향**:
+
 - SKILL.md, README.md, changelog.md, NOTICE.txt, MANIFEST.txt, 전 스크립트,
   GitHub Actions 워크플로우에서 파일명 참조를 일괄 교체
 - `build_core_from_fullpack.{sh,ps1}` 및 `build_full_pack.{sh,ps1}`은
@@ -54,7 +55,7 @@ U+F900–FAFF Compatibility)에 포함된 글리프 수와 스킬 철학 9자
 **실측 결과 (2026-04-19)**:
 
 | 폰트 | 철학 9자 | 일상 13자 | CJK 총합 | 판정 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | NotoSansKR-VF.ttf | 9/9 | 13/13 | 8,566 | ✅ 완전 |
 | NotoSansKR[wght].ttf (동일 바이너리) | 9/9 | 13/13 | 8,566 | ✅ 완전 |
 | NanumMyeongjo-OldHangul.ttf | 9/9 | 13/13 | 5,005 | ✅ 완전 |
@@ -68,6 +69,7 @@ U+F900–FAFF Compatibility)에 포함된 글리프 수와 스킬 철학 9자
 **v1.1.0의 "코어 5종 모두 CJK 완전 지원" 주장은 실측으로 재확인됨**.
 
 **조치**:
+
 - **`scripts/verify_cjk_support.py` 신규 추가** — 위 실측 절차를 재현
   가능하게 도구화. 인자 없이 실행하면 스킬 디렉터리 자동 탐색, 상세
   리포트 출력. 옵션:
@@ -109,7 +111,7 @@ v1.0.x의 대응은 "한자가 필요하면 풀 폰트팩을 설치하라"는 �
 ### Breaking — 코어 구성 (24종 → 5종, ~28.5 MB)
 
 | 신규 코어 | 크기 | CJK 지원 |
-|---|---|---|
+| --- | --- | --- |
 | `NotoSansKR-VF.ttf` | 9.93 MB | ✅ 8,566자 (한·영·한자 통합 가변 폰트) |
 | `NanumMyeongjo-OldHangul.ttf` | 9.25 MB | ✅ 5,005자 (명조 + 옛한글 + 한문) |
 | `NanumBrushScript-Regular.ttf` | 3.66 MB | ✅ 4,888자 (붓글씨 캘리) |
@@ -229,7 +231,7 @@ v1.0.x에서 생성된 Python 디자인 코드는 **v1.1.0에서 거의 모두 �
 다. 다음 폰트 파일명 치환이 필요:
 
 | v1.0.x | v1.1.0 |
-|---|---|
+| --- | --- |
 | `Pretendard-*.otf` | `NotoSansKR-VF.ttf` + variation (weight) |
 | `NanumSquare-*.ttf`, `NanumSquareRound/Neo-*` | `NotoSansKR-VF.ttf` |
 | `NanumGothic-Light.ttf` | `NotoSansKR-VF.ttf` (weight=300) |
@@ -270,6 +272,7 @@ except AttributeError:
 대괄호(`[wght]`) 접미사를 사용한다.
 
 **수정 (v1.0.7 당시)**:
+
 - `NotoSansKR-Variable.ttf` → `NotoSansKR[wght].ttf`
 - `NotoSerifKR-Variable.ttf` → `NotoSerifKR[wght].ttf`
 - CJK 지원 실측 결과 기재:
@@ -281,7 +284,8 @@ except AttributeError:
 > 대괄호를 거부하는 문제로 **`NotoSansKR-VF.ttf`** 로 다시 변경됨.
 > 상세는 v1.1.0 "Build / Packaging Fix" 섹션 참고.
 
-### Changed
+### Changed — Metadata
+
 - `metadata.version`: 1.0.6 → 1.0.7
 - `metadata.updated`: 2026-04-18
 
@@ -295,7 +299,8 @@ except AttributeError:
 폰트가 실제로 CJK 한자를 지원하는지 표로 정리. (v1.0.7에서 파일명 실측
 일치 수정 수행.)
 
-### Changed
+### Changed — Metadata (v1.0.6)
+
 - `metadata.version`: 1.0.5 → 1.0.6
 - `metadata.updated`: 2026-04-17
 
@@ -311,6 +316,7 @@ Claude를 완전히 재시작한 뒤에도 **여전히 폰트 인식 실패**. C
 "폰트를 다른데서 찾는다"고 보고.
 
 **근본 원인**: SKILL.md에 코드를 적어두는 것만으로는 부족했음.
+
 - 스킬 시스템은 progressive disclosure 방식 — `assets/`는 명시적으로
   접근하지 않으면 Claude의 컨텍스트에 들어오지 않는다
 - Claude가 SKILL.md의 STEP 0 코드를 매 호출마다 실행하리라는 보장이 없다
@@ -338,7 +344,7 @@ Claude를 완전히 재시작한 뒤에도 **여전히 폰트 인식 실패**. C
    동봉된 평문 파일 목록. 인스톨러가 풀팩 설치 후 자동 갱신하므로
    풀팩 설치 후 정확한 파일명 목록이 항상 디스크에 존재.
 
-### Added
+### Added — 스크립트 및 매니페스트 (v1.0.5)
 
 - **`scripts/discover_fonts.py`** — 폰트 디스커버리 통합 스크립트
   - 6개 표준 경로 후보 자동 탐색 (스크립트 자체 위치 1순위)
@@ -349,7 +355,7 @@ Claude를 완전히 재시작한 뒤에도 **여전히 폰트 인식 실패**. C
   - 인스톨러가 풀팩 설치 후 자동 갱신
 - **SKILL.md 코어 24종 매니페스트 표** — 본문에 정확한 파일명 인라인 임베드
 
-### Changed
+### Changed — 구조 및 인스톨러 (v1.0.5)
 
 - **SKILL.md 구조**: 기존 STEP 0(긴 코드 블록)를 RULE 0(시각적 강제 박스)로
   격상. 폴백 매핑 표만 STEP 0 보강 섹션으로 분리.
@@ -386,6 +392,7 @@ Claude를 완전히 재시작한 뒤에도 **여전히 폰트 인식 실패**. C
 **조용히 폴백**하고, 한글이 □ 또는 빈칸으로 출력됨.
 
 **근본 원인**: SKILL.md가 잘못된 폰트 경로 패턴을 명시적으로 가르치고 있었음.
+
 - **STEP 0** (`os.path.dirname(__file__)`):
   Claude가 SKILL.md의 코드 블록을 `exec()` 방식으로 실행할 때
   `__file__`이 정의되지 않거나 임의 경로(`<stdin>` 등)를 가리킴.
@@ -401,6 +408,7 @@ PIL의 `ImageFont.truetype()`은 파일이 없으면 `OSError`를 던지지만, 
 한글이 깨짐.
 
 **해결**:
+
 - **STEP 0 전면 재작성**: `find_skill_root()` 함수로 환경별 표준 경로
   후보(Claude.ai `/mnt/skills/user/`, Claude Desktop/Code `~/.claude/skills/`,
   Windows `%USERPROFILE%\.claude\skills\`, 프로젝트 `.claude/skills/`,
@@ -411,7 +419,8 @@ PIL의 `ImageFont.truetype()`은 파일이 없으면 `OSError`를 던지지만, 
   ❌ 패턴과 그 결과(한글 누락)를 명시. "Use distinct fonts" 한 줄 안내도
   `FONT_DIR` 명시로 보강.
 
-### Changed
+### Changed — Metadata (v1.0.4)
+
 - `metadata.version`: 1.0.3 → 1.0.4
 - `metadata.updated`: 2026-04-17
 - `install_full_fonts.ps1` 기본 `$Version`: v1.0.3 → v1.0.4
@@ -419,6 +428,7 @@ PIL의 `ImageFont.truetype()`은 파일이 없으면 `OSError`를 던지지만, 
   (v1.0.3에서 누락되었던 동기화 보완)
 
 ### Migration from v1.0.3 to v1.0.4
+
 - SKILL.md 교체만으로 즉시 적용 가능 — 폰트 파일 변경 없음
 - 인스톨러 두 종도 함께 갱신 (기본 버전 정렬)
 - v1.0.3 이전 버전을 사용하던 사용자는 결과물에서 한글 누락이 사라짐을 확인
@@ -431,7 +441,8 @@ PIL의 `ImageFont.truetype()`은 파일이 없으면 `OSError`를 던지지만, 
 
 **문제**: PowerShell 인스톨러가 `✓ 완료`를 보고하지만 실제로는 단 한 개의
 폰트도 복사되지 않는 침묵 실패. 사용자 보고:
-```
+
+```text
 현재 설치된 폰트: 0 개
 ...
 ✓ 완료
@@ -444,6 +455,7 @@ PIL의 `ImageFont.truetype()`은 파일이 없으면 `OSError`를 던지지만, 
 PowerShell의 알려진 함정. **경로에 와일드카드(`\*`)나 `-Recurse`가 없으면
 `-Include` 매개변수가 조용히 무시되어 항상 빈 결과를 반환한다.**
 이로 인해:
+
 - 설치 전 코어 폰트 카운트(40·47번 줄): 24종이 있어도 0으로 보고
 - 복사 루프(117번 줄): **단 한 회도 실행되지 않음** — 풀팩 ZIP은
   정상 다운로드·압축 해제되었으나 `assets/fonts/`로 옮겨지지 않음
@@ -452,6 +464,7 @@ PowerShell의 알려진 함정. **경로에 와일드카드(`\*`)나 `-Recurse`�
 bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 
 **해결**:
+
 - 헬퍼 함수 `Get-FontFiles` 도입 — `Where-Object { $Extensions -contains $_.Extension }`
   패턴으로 `-Include` 함정을 완전히 우회
 - 카운트·목록·복사 루프 4곳 모두 새 패턴으로 교체
@@ -460,6 +473,7 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 ### Added — 인스톨러 검증 강화
 
 침묵 실패를 방지하기 위한 추가 검증:
+
 - **다운로드 후 ZIP 크기 검증** — 1 MB 미만이면 GitHub Release 부재 또는
   HTML 리다이렉트 페이지로 간주하고 즉시 실패
 - **압축 해제 후 폰트 카운트 검증** — 소스 디렉토리에 폰트가 0개면 실패
@@ -468,12 +482,14 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 - **`-Check` 모드 0개 경고** — 코어조차 발견되지 않으면 스킬 설치 자체가
   불완전할 수 있음을 안내
 
-### Changed
+### Changed — Metadata (v1.0.3)
+
 - 인스톨러 기본 `$Version`: `v1.0.2` → `v1.0.3`
 - `metadata.version`: 1.0.2 → 1.0.3
 - `metadata.updated`: 2026-04-17
 
 ### Migration from v1.0.2 to v1.0.3
+
 - v1.0.2의 `install_full_fonts.ps1`은 사용 불가 — v1.0.3 스크립트로 교체 후 재실행
 - bash 사용자(Linux/macOS/NAS)는 영향 없음
 - v1.0.2에서 풀팩 설치를 시도했던 Windows 사용자는 `assets/fonts/`에
@@ -496,18 +512,21 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 ### Removed (Moved to Full Pack)
 
 #### 중복 Weight 감축
+
 - Pretendard: Light/Medium 제거 → Regular/Bold/Black 유지 (3종)
 - NanumSquare: Light/ExtraBold 제거 → Regular/Bold 유지 (2종)
 - NanumSquareRound: Light/ExtraBold 제거 → Regular/Bold 유지 (2종)
 - NanumSquareNeo: ExtraBold 제거 → Regular/Bold 유지 (2종)
 
 #### 특수 디스플레이·향토·캘리 폰트 → 풀팩 이동
+
 - **NanumBrushScript** (붓글씨 캘리그래피) — 코어에 캘리 폰트 없음
 - **Jua-Regular** (주아체) — BlackHanSans/DoHyeon으로 대체 가능
 - **SongMyung-Regular** (송명) — NanumMyeongjo로 대체 가능
 - **JejuGothic-Regular** (제주고딕) — NanumGothic-Light로 대체 가능
 
-### Changed — SKILL.md
+### Changed — SKILL.md (v1.0.2)
+
 - **description**: "한글 28종 + 영문 7종" → "한글 17종 + 영문 7종",
   "풀팩 94종" → "풀팩 105종"
 - **폴백 매핑 표**: 제거된 폰트에 대한 대체 안내 추가
@@ -519,13 +538,16 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 - **Core font selection guide**: 24종 기준 재작성
 - **Calligraphy 섹션**: 코어에 캘리 없음을 명시하고 풀팩 설치 유도
 
-### Changed — Documentation
+### Changed — Documentation (v1.0.2)
+
 - `README.md`: 코어 폰트 목록 24종으로 재작성, ZIP 크기 ~22 MB → ~14 MB
 - `NOTICE.txt`: v1.0.2 아키텍처 노트 추가, 코어 폰트 목록 재작성,
   풀팩 전용 폰트 항목 명시
 
 ### Migration from v1.0.1 to v1.0.2
+
 기존 v1.0.1 사용자:
+
 1. 기존 `canvas-design-kr/` 디렉토리 백업 또는 삭제
 2. v1.0.2 슬림 코어 설치
 3. **캘리그래피/디스플레이 다양성이 필요하면 풀팩 필수 설치**:
@@ -537,15 +559,18 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 **문제**: 초기 상태의 ZIP은 ~116 MB로, Claude Desktop의 30 MB 스킬 등록 한도를 초과하여 등록 불가.
 
 **해결**: 폰트를 두 단계로 분리.
+
 - **슬림 코어** (~22 MB ZIP) — 35종 핵심 폰트만 번들 → Claude Desktop 직접 등록 가능
 - **풀 폰트팩** (~110 MB ZIP) — 나머지 94종 → GitHub Release Asset, 자동 다운로드 스크립트로 설치
 
 이로써 Claude Desktop·Claude.ai·Cowork·Claude Code 모든 환경에서 사용 가능.
 
-### Added
+### Added — 아키텍처 및 스크립트 (v1.0.2)
 
 #### Slim Core (35 fonts)
+
 **한글 코어 (28종)** — 가장 가볍고 다양한 조합:
+
 - Pretendard (Light/Regular/Medium/Bold/Black) — 한·영 통합 만능 본문
 - NanumSquare 4 weights — 한자 포함, 가벼움
 - NanumSquareRound 4 weights — 친근한 라운드
@@ -557,11 +582,14 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 - JejuGothic, SongMyung, Sunflower-Bold — 디스플레이/향토
 
 **영문 코어 (7종)** — Pretendard로 한·영 통합 가능하므로 진짜 디스플레이용만:
+
 - WorkSans Regular/Bold, Lora Regular
 - Italiana, BigShoulders Bold, InstrumentSerif, JetBrainsMono
 
 #### Full Font Pack (94 additional fonts, separate distribution)
+
 풀팩 ZIP에 포함:
+
 - NanumGothic Regular/Bold/ExtraBold + Eco 시리즈 3종
 - NanumMyeongjo Bold/ExtraBold + Eco 시리즈 3종 + OldHangul
 - NanumBarunGothic 4 weights + OldHangul
@@ -576,11 +604,13 @@ bash 인스톨러는 `find` 기반이라 동일 버그 없음.
 - 모든 폰트의 SIL OFL 라이선스 파일 50개
 
 #### NAVER Nanum Full Family Integration
+
 초기 Google Fonts 배포 서브셋을 NAVER 공식 나눔글꼴 패키지(한글한글 아름답게) 전체로 교체하여
 NanumGothicEco, NanumMyeongjoEco, NanumBarunGothic/Barunpen, NanumSquare 4종, NanumSquareRound 4종,
 NanumSquareNeo 5종, NanumHuman 6종 등 공식 바이너리로 확장.
 
 #### Distribution Scripts
+
 - `scripts/install_full_fonts.sh` — Linux/macOS/NAS bash installer
   - GitHub Release에서 풀팩 자동 다운로드
   - `--check` 옵션: 현재 설치된 폰트 확인만
@@ -592,22 +622,26 @@ NanumSquareNeo 5종, NanumHuman 6종 등 공식 바이너리로 확장.
   - PowerShell 5.1+ 호환
 
 #### Distribution Infrastructure
+
 - `.gitattributes`, `.gitignore`, `.github/workflows/release.yml`
 
-### Changed — SKILL.md
+### Changed — SKILL.md (v1.0.2 Slim Core)
+
 - **STEP 0 (NEW)** — 동적 폰트 탐색 단계 추가 (코어 vs 풀팩 자동 인식)
 - **코어 → 풀팩 폴백 매핑 표** — 요청 폰트가 코어에 없을 때 즉시 대체 폰트 안내
 - **assets/fonts/** 경로로 통일 (skill-creator 표준 디렉토리 명칭 채택)
 - 폰트 매핑 가이드를 코어 35종 기준으로 재작성, 풀팩 폰트는 폴백 표로 분리
 - description에 "코어 즉시 사용 + 풀팩 확장" 명시
 
-### Changed — Metadata/Structure
+### Changed — Metadata/Structure (v1.0.2)
+
 - 프론트매터 최상위 `version` → `metadata.version`으로 이동
   (Anthropic 공식 스킬 검증 스크립트 호환)
 - `changelog.md` 위치를 `references/` 에서 루트로 이동
 - `metadata.updated`: 2026-04-17
 
-### Changed — Documentation
+### Changed — Documentation (v1.0.2 Initial)
+
 - `README.md` — 슬림/풀팩 아키텍처 설명, 설치 절차 두 단계로 분리
 - `NOTICE.txt` — 아키텍처 변경 명시, 코어/풀팩 폰트 목록 분리
 - `changelog.md` — 본 문서 (루트 배치)
@@ -621,14 +655,16 @@ NanumSquareNeo 5종, NanumHuman 6종 등 공식 바이너리로 확장.
 Forked from `anthropic/canvas-design` (Apache License 2.0) and extended for
 Korean aesthetics and Hangul typography.
 
-#### Added
+#### Added — Initial Content
+
 - 27 Korean OFL fonts (Pretendard, Nanum subset, Noto CJK, Gowun, Woowahan,
   Jeju, etc.)
 - 5 Korean aesthetic philosophies: 餘白, 丹靑, 縫補, 古調, 餘湍
 - Hangul typography rules + Korean color systems (오방색, 자연 염색)
 - Apache 2.0 attribution, NOTICE.txt, README.md, changelog.md
 
-#### Retained
+#### Retained — From canvas-design
+
 - All 35 original Latin typefaces from canvas-design
 - Original 5 design philosophies (Concrete Poetry, Chromatic Language,
   Analog Meditation, Organic Systems, Geometric Silence)

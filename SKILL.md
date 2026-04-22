@@ -18,6 +18,8 @@ Based on canvas-design (© Anthropic, Apache License 2.0)
 See LICENSE-canvas-design.txt and NOTICE.txt for full attribution.
 -->
 
+# canvas-design-kr
+
 This skill creates **museum-quality visual art** — posters, single-page compositions, PDFs — driven by a **design philosophy**, expressed through form, space, color, and minimal text. It extends the original `canvas-design` skill for Korean aesthetics:
 
 - **5 CJK-complete core fonts** (~28.5 MB, Desktop 30 MB 한도 내) — 한글·영문·한자 모두 즉시 지원
@@ -36,7 +38,7 @@ Output only `.md`, `.pdf`, and `.png` files.
 ### 환경 감지 — 3가지 실행 환경
 
 | 환경 | 특징 | 스크립트 실행 |
-|---|---|---|
+| --- | --- | --- |
 | **Claude Code (CLI)** | `~/.claude/skills/`에 디렉터리 배치, bash/PowerShell 가능 | ✅ `discover_fonts.py` 사용 |
 | **Claude Desktop** | ZIP 업로드, 샌드박스 내부 스냅샷 사용 | ⚠️ 제한적, 인라인 코드 권장 |
 | **claude.ai 웹** | ZIP 업로드, 샌드박스 내부 스냅샷 사용 | ⚠️ 제한적, 인라인 코드 권장 |
@@ -89,7 +91,7 @@ FONTS = sorted(
 ### 패키지 판정
 
 | `len(FONTS)` | 상태 | 행동 |
-|---|---|---|
+| --- | --- | --- |
 | 0 | 스킬 설치 불완전 | 즉시 중단, 사용자에게 재설치 안내 |
 | 1–4 | 코어 일부 누락 | 누락 파일을 사용자에게 보고, 가용 폰트로 진행 |
 | 5 (정확) | **코어 패키지 (v1.1.0)** | [코어 5종 매니페스트](#코어-5종-매니페스트-v110) 참고 |
@@ -109,7 +111,7 @@ FONTS = sorted(
 ### 코어 5종 매니페스트 (v1.1.0)
 
 | 파일명 | 분류 | CJK | 크기 | 용도 |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `NotoSansKR-VF.ttf` | 가변 산세리프 | ✅ 8,566자 | 9.93 MB | **기본 본문**(한·영·한자 통합) |
 | `NanumMyeongjo-OldHangul.ttf` | 명조 + 옛한글 | ✅ 5,005자 | 9.25 MB | 고전 명조, 옛한글, 한문 |
 | `NanumBrushScript-Regular.ttf` | 붓글씨 캘리 | ✅ 4,888자 | 3.66 MB | 餘湍·발묵·한자 서예 |
@@ -177,6 +179,7 @@ font = ImageFont.truetype(os.path.join(FONT_DIR, "Pretendard-Bold.otf"), 64)
 ---
 
 Complete the work in two steps:
+
 1. **Design Philosophy Creation** (`.md` file)
 2. **Canvas Expression** (`.pdf` or `.png` file)
 
@@ -193,7 +196,7 @@ Complete the work in two steps:
 v1.1.0 코어는 의도적으로 슬림하므로, **대부분의 폰트가 풀팩 전용**이다. 요청 폰트가 코어에 없으면:
 
 | 요청 폰트 (풀팩 전용) | 코어 대체 폰트 | 비고 |
-|---|---|---|
+| --- | --- | --- |
 | **Pretendard** (Light/Regular/Medium/Bold/Black) | **NotoSansKR-VF** | 가변 축으로 굵기 조절, 한·영·한자 통합 |
 | **NanumGothic** (Light/Regular/Bold/ExtraBold) | **NotoSansKR-VF** | 서브셋 → 가변 산세리프 대체 |
 | **NanumSquare/Round/Neo** 시리즈 | **NotoSansKR-VF** | 모던 산세리프는 NotoSansKR로 통합 |
@@ -221,6 +224,7 @@ v1.1.0 코어는 의도적으로 슬림하므로, **대부분의 폰트가 풀�
 Create a **VISUAL PHILOSOPHY** (not a layout, not a template) that the canvas step will interpret through form, space, color, composition, images, graphics, shapes, patterns, and minimal text as visual accent.
 
 ### THE CRITICAL UNDERSTANDING
+
 - **Received**: subtle input/instructions from the user, used as foundation, not as constraint.
 - **Created**: a design philosophy, an aesthetic movement.
 - **Next**: the same Claude expresses it visually — artifacts that are **90% visual design, 10% essential text**.
@@ -232,6 +236,7 @@ The philosophy must emphasize: **visual expression, spatial communication, artis
 **Name the movement** (1–2 words). Examples: "Brutalist Joy" / "Chromatic Silence" / "餘白 (Yeobaek)" / "조각보 (Jogakbo)".
 
 **Articulate the philosophy** (4–6 concise paragraphs) covering:
+
 - Space and form
 - Color and material
 - Scale and rhythm
@@ -239,6 +244,7 @@ The philosophy must emphasize: **visual expression, spatial communication, artis
 - Visual hierarchy
 
 **CRITICAL GUIDELINES:**
+
 - **Avoid redundancy**: each design aspect mentioned once.
 - **Emphasize craftsmanship REPEATEDLY**: stress that the final work should appear meticulously crafted, labored over, master-level. Repeat phrases like "meticulously crafted," "the product of deep expertise," "painstaking attention," "master-level execution."
 - **Leave creative space**: be specific about aesthetic direction, but concise enough that the canvas step has interpretive room — also at extremely high craftsmanship.
@@ -277,6 +283,7 @@ The flow of ink in 한지 (Korean mulberry paper) — controlled bleeds, the mom
 *These are condensed examples. Actual philosophies should be 4–6 substantial paragraphs.*
 
 ### ESSENTIAL PRINCIPLES
+
 - **VISUAL PHILOSOPHY** — an aesthetic worldview to be expressed through design
 - **MINIMAL TEXT** — sparse, essential-only, integrated as visual element
 - **SPATIAL EXPRESSION** — ideas communicate through space, form, color, composition
@@ -301,6 +308,7 @@ With philosophy established, express it on canvas. Use the philosophy as foundat
 Generally use repeating patterns and perfect shapes. Treat the abstract philosophy as if it were a scientific bible: dense accumulation of marks, repeated elements, layered patterns. Add sparse, clinical typography and systematic reference markers. Anchor with simple phrase(s) positioned subtly, using a limited color palette that feels intentional and cohesive.
 
 **For Korean philosophies specifically:**
+
 - Reach for **vertical composition** when 餘白 / 餘湍 is invoked.
 - Use **flat color planes meeting at sharp seams** for 丹靑 / 縫補. Avoid gradients in these movements.
 - For 古調, treat **negative space as the primary subject**.
@@ -317,40 +325,41 @@ Text is always minimal and visual-first, but context guides scale. Most of the t
 ## HANGUL + CJK TYPOGRAPHY RULES
 
 ### Mandatory rule
+
 **Any Hangul (한글) or CJK (한자/漢字) glyph in the composition MUST be rendered with a CJK-capable font.** v1.1.0 코어 5종은 모두 CJK 완전 지원 — 이 문제는 코어에서 근본적으로 해결되었다.
 
 ### Core font selection guide (v1.1.0, 5 fonts)
 
-**Body sans-serif (한·영·한자 통합)**
+#### Body sans-serif (한·영·한자 통합)
 
 | Use case | Font | Variation weight |
-|---|---|---|
+| --- | --- | --- |
 | All-purpose body | **NotoSansKR-VF.ttf** | 400 (Regular) |
 | Light display | **NotoSansKR-VF.ttf** | 300 (Light) |
 | Bold impact | **NotoSansKR-VF.ttf** | 700 (Bold) |
 | Maximum impact (丹靑) | **NotoSansKR-VF.ttf** | 900 (Black) |
 
-**Body serif / 옛한글 / 한문**
+#### Body serif / 옛한글 / 한문
 
 | Use case | Font |
-|---|---|
+| --- | --- |
 | Classical body serif | **NanumMyeongjo-OldHangul.ttf** |
 | Display serif (餘白) | **NanumMyeongjo-OldHangul.ttf** + larger size |
 | 옛한글 (중세 국어) | **NanumMyeongjo-OldHangul.ttf** |
 | 한문 서예 (활자) | **NanumMyeongjo-OldHangul.ttf** |
 
-**Calligraphy / handwriting / 붓글씨**
+#### Calligraphy / handwriting / 붓글씨
 
 | Use case | Font |
-|---|---|
+| --- | --- |
 | Brush stroke (餘湍, 발묵) | **NanumBrushScript-Regular.ttf** |
 | Pen script (손글씨) | **NanumPenScript-Regular.ttf** |
 | 한자 서예 | **NanumBrushScript-Regular.ttf** |
 
-**Display / 향토 / 지역성**
+#### Display / 향토 / 지역성
 
 | Use case | Font |
-|---|---|
+| --- | --- |
 | 제주 향토 디스플레이 | **JejuGothic-Regular.ttf** |
 | 지역 특화 포스터 | **JejuGothic-Regular.ttf** |
 
@@ -361,6 +370,7 @@ Text is always minimal and visual-first, but context guides scale. Most of the t
 **Option A — Single unified font (strongly recommended for v1.1.0):** `NotoSansKR-VF.ttf` contains high-quality Hangul, Latin, AND CJK glyphs — use it alone for clean mixed text.
 
 **Option B — Paired fonts:** 명조 본문과 산세리프 혼용 시:
+
 - 본문 명조: `NanumMyeongjo-OldHangul.ttf`
 - 헤더 산세리프: `NotoSansKR-VF.ttf` (weight 700)
 
@@ -393,15 +403,19 @@ Do NOT rotate Hangul or CJK glyphs — they are designed for both horizontal and
 ## KOREAN COLOR SYSTEMS
 
 ### 오방색 (Five Cardinal Colors)
+
 靑(東) `#003F87` · 赤(南) `#C8102E` · 黃(中) `#FFD100` · 白(西) `#F5F2E8` · 黑(北) `#1A1A1A`
 
 ### 오간색 (Five Intermediate)
+
 綠 `#4A7C59` · 紅 `#E8959A` · 碧 `#6B9BB8` · 紫 `#6B3F7C` · 硫黃 `#C9A85E`
 
 ### 자연 염색 팔레트 (縫補 / 古調)
+
 쪽 `#1F3A5F` · 치자 `#E8C547` · 홍화 `#D9777A` · 먹 `#2B2926` · 모시 `#F2EBD8` · 황토 `#B07F4A` · 한지 `#FAF6EE`
 
 ### Pairing rules
+
 - 오방색 within a single composition: **3 of 5 maximum**
 - For 古調: stay within natural-dye palette + black/white only. Never mix saturated 오방색 into 古調.
 - 단청: paired complementary blocks (靑↔赤, 黃↔黑) with 白 as separator.
@@ -427,7 +441,6 @@ bash scripts/install_full_fonts.sh
 설치 후 폰트 총 개수가 5 → 129개로 확장된다. 인스톨러는 설치 완료 시 `assets/fonts/MANIFEST.txt`를 자동 갱신하므로, 풀팩 설치 후에는 RULE 0의 디스커버리를 다시 실행하여 새 `FONTS` 목록을 반영한다.
 
 > **풀팩 ZIP 빌드 (유지보수자용)**: GitHub Release에 올릴 풀팩 ZIP은 로컬에 129종이 설치된 상태에서 `scripts/build_full_pack.sh` 또는 `scripts/build_full_pack.ps1`로 생성한다. 결과물은 코어 5종을 제외한 124종 + OFL 라이선스를 담은 `canvas-design-kr-fonts-full-v1.1.0.zip`.
-
 > **Claude Desktop / claude.ai 웹 사용자**: 이 환경은 ZIP 업로드만 지원하며 스크립트 실행이 불가능하다. 풀팩이 필요하면 Claude Code 환경에서 설치 후 NAS·로컬 디렉터리를 공유하거나, 필요한 풀팩 폰트가 번들된 별도 ZIP을 제작해 업로드한다.
 
 ---
